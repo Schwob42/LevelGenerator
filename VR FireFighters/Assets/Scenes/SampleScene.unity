@@ -153,9 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualization: {fileID: 11400000, guid: 2e4df301d86c36a4b9b1ed168bf5456b, type: 2}
+  seed: 123
   mazeSize:
-    x: 10
-    y: 10
+    x: 20
+    y: 20
 --- !u!4 &524253320
 Transform:
   m_ObjectHideFlags: 0
