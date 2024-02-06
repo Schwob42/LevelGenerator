@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class MazeCellObject : MonoBehaviour
 {
+	[SerializeField]
+	bool door;
+
 #if UNITY_EDITOR
 	static List<Stack<MazeCellObject>> pools;
 
@@ -52,4 +55,8 @@ public class MazeCellObject : MonoBehaviour
 		pool.Push(this);
 		gameObject.SetActive(false);
 	}
+
+	public bool GetDoor() => door;
+
+
 }
