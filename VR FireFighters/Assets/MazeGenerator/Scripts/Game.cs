@@ -19,21 +19,27 @@ public class Game : MonoBehaviour
 
 	Maze maze;
 
+	//TODO: Change 10 to a variable value
+	[Range(3,10)]
+	int minimumCorridorLength = 3;
+
+	[SerializeField, Tooltip("You should use a point on the edge of the maze like (0,y) or (x,0)")]
+	int2 startPosition = int2(0,0);
+
 	void Awake()
 	{
+		if(mazeSize.x<=0 || mazeSize.y <=0 || startPosition.x < 0 || startPosition.y < 0 || minimumCorridorLength <= 0)
+        {
+			// TODO: This should open an error message in the editor and NOT exit the game.
+			Debug.LogError("Your config values of the maze are stupid!!!!");
+			return;
+        }
+
+
 		maze = new Maze(mazeSize);
 
-		new GenerateMazeJob
-		{
-			maze = maze,
-			seed = seed != 0 ? seed : Random.Range(1, int.MaxValue)
-		}.Schedule().Complete();
+		new GenerateField(maze);
 
-		visualization.Visualize(maze);
-	}
-
-	void OnDestroy()
-	{
-		maze.Dispose();
+		visualization.Visualize(maze, minimumCorridorLength, startPosition);
 	}
 }

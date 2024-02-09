@@ -5,10 +5,15 @@ public class MazeCellObject : MonoBehaviour
 {
 	[SerializeField]
 	bool door;
+	
+	
 
+	
+	
 #if UNITY_EDITOR
 	static List<Stack<MazeCellObject>> pools;
 
+	
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 	static void ClearPools()
 	{
@@ -57,6 +62,7 @@ public class MazeCellObject : MonoBehaviour
 	}
 
 	public bool GetDoor() => door;
+
 
 
 }

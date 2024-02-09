@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Mathematics;
 
 [CreateAssetMenu]
 public class MazeVisualization : ScriptableObject
@@ -21,8 +22,39 @@ public class MazeVisualization : ScriptableObject
 		Quaternion.Euler(0f, 270f, 0f)
 	};
 
-	public void Visualize(Maze maze)
+	public void Visualize(Maze maze, int minimumCorridorLength, int2 startPosition)
 	{
+		
+		// Start 
+		float randomValue = UnityEngine.Random.Range(0f, 1f);
+		MazeCellObject nextCell = null;
+
+		switch (randomValue) {
+			case < 0.1f:
+				nextCell = End;
+				break;
+			case < .5f:
+				nextCell = Corridor;
+				break;
+			case < .7f:
+				nextCell = Corner;
+				break;
+			case < .8f:
+				nextCell = X_Crossing;
+				break;
+			case <= 1f:
+				nextCell = T_Crossing;
+				break;
+		}
+		nextCell.GetInstance();
+		maze.GetMazeCell(startPosition.x, startPosition.y).ChangeMazeCellObject(nextCell);
+		maze.CoordinatesToWorldPosition(new int2(0,0), startPosition);
+
+		
+		
+
+
+		/*
 		for (int i = 0; i < maze.Length(); i++)
 		{
 			(MazeCellObject, int) prefabWithRotation = GetPrefab(maze[i], true);
@@ -42,6 +74,7 @@ public class MazeVisualization : ScriptableObject
 
             
 		}
+		*/
 	}
 
 	/**
@@ -59,6 +92,7 @@ public class MazeVisualization : ScriptableObject
 	 * MazePrefabs: True für Prefabs aus dem Maze
 	 *				False für Prefabs aus dem Raum
 	 */
+	/*
 	(MazeCellObject, int) GetPrefab(MazeFlags flags, bool MazePrefabs)
     {
         if (MazePrefabs) { 
@@ -94,8 +128,9 @@ public class MazeVisualization : ScriptableObject
         }
     }
 
-	
+	*/
 
+	/*
 
 	private int GenerateRoom(int mazePosition, Maze maze)
     {
@@ -138,4 +173,5 @@ public class MazeVisualization : ScriptableObject
 		}
 		return room.Count;
 	}
+	*/
 }

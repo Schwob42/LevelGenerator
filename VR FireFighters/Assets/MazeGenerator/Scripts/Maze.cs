@@ -8,90 +8,47 @@ public struct Maze
 {
 	int2 size;  //size with x and y values
 
-	[NativeDisableParallelForRestriction] NativeArray<MazeFlags> cells;
-
-	public MazeFlags this[int index]
-	{
-		get => cells[index];
-		set => cells[index] = value;
-	}
+	MazeCell[,] cells;
 
 	public Maze(int2 size)
 	{
 		this.size = size;
-		cells = new NativeArray<MazeFlags>(size.x * size.y, Allocator.Persistent);
+		cells = new MazeCell[size.y, size.x];
 	}
 
-	public MazeFlags Set(int index, MazeFlags mask) =>
-		cells[index] = cells[index].With(mask);
+	public MazeCell GetMazeCell(int x, int y)
+    {
+		return cells[y, x];
+    }
+	
+	public void SetMazeCell(int x, int y, MazeCell mazeCell)
+    {
+		cells[y, x] = mazeCell;
+    }
 
-	public MazeFlags Unset(int index, MazeFlags mask) =>
-		cells[index] = cells[index].Without(mask);
-
-	public int2 IndexToCoordinates(int index)
-	{
-		int2 coordinates;
-		coordinates.y = index / size.x;
-		coordinates.x = index - size.x * coordinates.y;
-		return coordinates;
-	}
-	/**
-	 * Für ein 8x9 (x,y) Maze ergibt damit: (mit der Methode Visualize() aus MazeVisualization)
-	 * y0 = 0/8 = 0
-	 * x0 = 0 - 8*0 = 0
-	 * 
-	 * Anschließend
-	 * y1 = 1/8 
-	 * x1 = 1 - 8*1/8 = 0
-	 * 
-	 * y2 = 2/8 
-	 * x2 = 2 - 8*2/8 = 0
-	 * 
-	 * usw.
-	 */
-
-	/***
-	 * Returns the length of the maze (x value * y value)
-	 */
+	
 	public int Length()
     {
 		return size.x * size.y;
     }
 
-	public Vector3 CoordinatesToWorldPosition(int2 coordinates, float y = 0f) =>
-		new Vector3(
-			2f * coordinates.x + 1f - size.x,
-			y,
-			2f * coordinates.y + 1f - size.y
-		);
 	/**
-	 * Für obiges Bspw ergibt sich: 
-	 * y0 = 0/8 = 0
-	 * x0 = 0-8*0 = 0
-	 * => (2*0+1-8, 0, 2*0+1-9) = (-7,0,-8) 
+	 * Don't be confused. The y coordinates are the z coordinate in the real coordinate system.
+	 * The x coordinate is still x and the real y is constant 0.
 	 * 
-	 * Anschließend
-	 * y1 = 1/8 
-	 * x1 = 1 - 8*1/8 = 0
-	 * => (2*0+1-8, 0, 2*1/8+1-9) = (-7,0,-7,75)
-	 * 
-	 * y2 = 2/8 
-	 * x2 = 2 - 8*2/8 = 0
-	 * => (2*0+1-8, 0, 2*2/8+1-9) = (-7,0,-7,5)
-	 * 
-	 * usw.
+	 * shift: The shift of the zero point of the maze
 	 */
-
-	public Vector3 IndexToWorldPosition(int index, float y = 0f) =>
-		CoordinatesToWorldPosition(IndexToCoordinates(index), y);
+	public Vector3 CoordinatesToWorldPosition(int2 shift, int2 MazeCellCoordinates) =>
+		new Vector3(
+			2f * MazeCellCoordinates.x + shift.x,
+			0,
+			2f * MazeCellCoordinates.y + shift.y
+		);
 	
-	public void Dispose()
-	{
-		if (cells.IsCreated)
-		{
-			cells.Dispose();
-		}
-	}
+	public int2 GetSize()
+    {
+		return size;
+    }
 
 	public int SizeEW => size.x;
 

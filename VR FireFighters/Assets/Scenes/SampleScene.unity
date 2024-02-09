@@ -155,8 +155,11 @@ MonoBehaviour:
   visualization: {fileID: 11400000, guid: 2e4df301d86c36a4b9b1ed168bf5456b, type: 2}
   seed: 0
   mazeSize:
-    x: 20
-    y: 20
+    x: 10
+    y: 10
+  startPosition:
+    x: 0
+    y: 0
 --- !u!4 &17355756
 Transform:
   m_ObjectHideFlags: 0
