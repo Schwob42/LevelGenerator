@@ -8,51 +8,78 @@ public class Maze_Cell : MonoBehaviour
      * True when the cell is empty.
      * False else.
      */
-    bool isEmpty;
+    private bool isEmpty;
 
     /*
      * True when the passage is free, false if blocked.
-     * Blocked by edge of field, cell walls or what ever doesn't matter. 
+     * Blocked by edge of field, cell walls or what ever doesn't matter.
+     * The originals are used for saving the condition at the initialization. 
      */
-    bool passageNorth, passageEast, passageSouth, passageWest;
+    private bool passageNorthOriginal, passageEastOriginal, passageSouthOriginal, passageWestOriginal;  // NEVER EVER CHANGE THIS AND MAKE NO SETTER
+    private bool passageNorth, passageEast, passageSouth, passageWest;
 
     /*
      * The object to set into the cell. Could be null.
      */
-    MazeCellGameObject mazeCellObject;
+    private MazeCellGameObject mazeCellObject;
 
-    public Maze_Cell()
+    public Maze_Cell(bool passageNorth, bool passageEast, bool passageSouth, bool passageWest)
     {
         isEmpty = true;
+
+        this.passageNorthOriginal = this.passageNorth = passageNorth;
+        this.passageEastOriginal = this.passageEast = passageEast;
+        this.passageSouthOriginal = this.passageSouth = passageSouth;
+        this.passageWestOriginal = this.passageWest = passageWest;
     }
 
-    public bool SetMazeCellObject(MazeCellGameObject obj)
+    /**
+     * Setzt ein neues Objekt in die Zelle, sofern dies möglich ist.
+     * Return True, wenn erfolgreich
+     * Return False, falls nicht möglich, es gibt schon ein Objekt oder übergebenes Objekt leer ist.
+     */
+    public bool SetMazeCellObject(int rotaion, MazeCellGameObject obj)
     {
+        if (obj == null) return false;
+        if (!isEmpty) return false;
+        if (!CheckObjectFacing(obj)) return false;
+
+        passageNorth = obj.GetFaceNorth();
+        passageEast = obj.GetFaceEast();
+        passageSouth = obj.GetFaceSouth();
+        passageWest = obj.GetFaceWest();
         mazeCellObject = obj;
-
-        if (obj == null)
-        {
-            isEmpty = true;
-            passageNorth = passageEast = passageSouth = passageWest = true;
-            return true;
-        }
-        else
-        {
-            if (!CheckObjectFacing(obj)) return false;
-
-            passageNorth = obj.GetFaceNorth();
-            passageEast = obj.GetFaceEast();
-            passageSouth = obj.GetFaceSouth();
-            passageWest = obj.GetFaceWest();
-            return true;
-        }
+        isEmpty = false;
+        return true;
     }
+
+    /**
+     * Entfernt das GameObject in der Zelle, sofern vorhanden.
+     * 
+     * Gibt True zurück, sofern ein Objekt entfernt wurde,
+     * False, wenn kein Objekt entfernt werden konnte. 
+     */
+    public bool RemoveCellObject()
+    {
+        if (mazeCellObject == null) return false;
+
+        passageNorth = passageNorthOriginal;
+        passageEast = passageEastOriginal;
+        passageSouth = passageSouthOriginal;
+        passageWest = passageWestOriginal;
+
+        isEmpty = true;
+        mazeCellObject = null;
+        return true;
+    }
+
 
     /**
      * Die Methode prüft, ob ein übergebenes Objekt in eine leere Zelle passt ohne, dass Wände und Gänge kollifieren.
      * 
      * Es wird erst geprüft, ob es vom Objekt aus eine Orientierung nach Norden, Osten, Süden oder Westen gibt und wenn ja
      * wird überprüft, ob die Zelle dort ebenfalls eine offene Ausrichtung hat. 
+     * Im weiteren Verlauf wird dasselbe mit den Türen des Objekts gemacht, sofern das Objekt Türen hat.
      * 
      * Returns TRUE when everything is fine
      * FALSE else.
@@ -61,6 +88,7 @@ public class Maze_Cell : MonoBehaviour
      */
     private bool CheckObjectFacing(MazeCellGameObject obj)
     {
+        // Passagen
         if (obj.GetFaceNorth())
         {
             if (obj.GetFaceNorth() != passageNorth) return false;
@@ -77,9 +105,32 @@ public class Maze_Cell : MonoBehaviour
         {
             if (obj.GetFaceWest() != passageWest) return false;
         }
+
+        // Türen
+        if (!obj.objectHasDoor())   // fall das Objekt keine Türen hat, wird der Rest übersprungen
+        {
+            return true;
+        }
+
+        if (obj.GetDoorNorth())
+        {
+            if (obj.GetDoorNorth() != passageNorth) return false;
+        }
+        if (obj.GetDoorEast())
+        {
+            if (obj.GetDoorEast() != passageEast) return false;
+        }
+        if (obj.GetDoorSouth())
+        {
+            if (obj.GetDoorSouth() != passageSouth) return false;
+        }
+        if (obj.GetDoorWest())
+        {
+            if (obj.GetDoorWest() != passageWest) return false;
+        }
+
         return true;
     }
-
 
     public bool GetPassageNorth()
     {
