@@ -6,7 +6,6 @@ public class MazeCellObject : MonoBehaviour
 	[SerializeField]
 	bool door;
 	
-	
 
 	
 	

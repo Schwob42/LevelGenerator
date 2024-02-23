@@ -15,6 +15,15 @@ public class Maze_Field : MonoBehaviour
         cells = new Maze_Cell[mazeSizeY, mazeSizeY];
     }
 
+    public bool CellExists(int x, int y)
+    {
+        if(x<0 || x>= mazeSizeX || y<0 || y >= mazeSizeY)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void SetCellDefault(int x, int y)
     {
 
@@ -35,6 +44,13 @@ public class Maze_Field : MonoBehaviour
 
     }
 
+    private MazeCellGameObject CreateCopyOfGameObject(MazeCellGameObject go)
+    {
+        MazeCellGameObject mzo = Instantiate(go);
+        mzo.gameObject.SetActive(false);
+        return mzo;
+    }
+
     /**
      * Versucht ein übergebenes Object dem Maze hinzuzufügen.
      * 
@@ -44,17 +60,25 @@ public class Maze_Field : MonoBehaviour
      */
     public bool SetGameObjectIntoCell(int x, int y, int rotation, MazeCellGameObject mazeCellGameObject)
     {
-        mazeCellGameObject.RotateObject(rotation);
-        if (!CheckObjectFacing(x, y, mazeCellGameObject)) return false;
+        //Debug.Log("I've got an " + mazeCellGameObject + " for " + (x, y, rotation));
+        MazeCellGameObject mzo = CreateCopyOfGameObject(mazeCellGameObject);
+        mzo.RotateObject(rotation);
 
-        if(!cells[y, x].SetMazeCellObject(rotation, mazeCellGameObject)) return false;
+        if (!CheckObjectFacing(x, y, mzo))
+        {
+            Destroy(mzo.gameObject);
+            return false;
+        }
 
-        mazeCellGameObject.RotateObject(-rotation);
-
-        MazeCellGameObject mzo = GameObject.Instantiate(mazeCellGameObject);
+        if (!cells[y, x].SetMazeCellObject(rotation, mzo))
+        {
+            Destroy(mzo.gameObject);
+            return false;
+        }
 
         mzo.transform.position = new Vector3(x*2, 1, y*2);
-        mzo.transform.Rotate(new Vector3(0,rotation,0));
+        mzo.gameObject.SetActive(true);
+        //mzo.transform.rotation = Quaternion.Euler(new Vector3(0,rotation,0));
 
         return true;
     }
@@ -78,6 +102,28 @@ public class Maze_Field : MonoBehaviour
     {
         //Debug.Log((x, y));
         if (obj == null) return true;
+        //Debug.Log(obj + " " +obj.GetFaceWest());
+        // 
+        if (CellExists(x,y-1) && GetCellAt(x,y-1).GetPassageNorth() && !GetCellAt(x,y-1).GetIsEmpty())
+        {
+            // Passage zur unteren Zelle verbaut?
+            if (!obj.GetFaceSouth()) return false;
+        }
+        if (CellExists(x-1, y) && GetCellAt(x - 1, y).GetPassageEast() && !GetCellAt(x - 1, y).GetIsEmpty())
+        {
+            // Passage zur linken Zelle verbaut?
+            if (!obj.GetFaceWest()) return false;
+        }
+        if (CellExists(x, y+1) && GetCellAt(x, y + 1).GetPassageSouth() && !GetCellAt(x, y + 1).GetIsEmpty())
+        {
+            // Passage zur oberen Zelle verbaut?
+            if (!obj.GetFaceNorth()) return false;
+        }
+        if (CellExists(x+1, y) && GetCellAt(x + 1, y).GetPassageWest() && !GetCellAt(x + 1, y).GetIsEmpty())
+        {
+            // Passage zur rechten Zelle verbaut?
+            if (!obj.GetFaceEast()) return false;
+        }
 
         if (obj.GetFaceNorth())     // Wenn das Objekt eine Passage nach Norden hat
         {
@@ -106,6 +152,7 @@ public class Maze_Field : MonoBehaviour
             if (obj.GetFaceWest() != cells[y, x-1].GetPassageEast()) return false;
             //Debug.Log("West good");
         }
+        
         //Debug.Log("All good");
         return true;
     }

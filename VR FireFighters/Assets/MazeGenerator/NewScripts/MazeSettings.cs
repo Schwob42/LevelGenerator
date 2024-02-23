@@ -15,9 +15,9 @@ public class MazeSettings : ScriptableObject
     [SerializeField, Range(0, 10), Tooltip("Minimale Länge eines Korridors, bis eine Kreuzung oder Kurve kommen darf. Enden sind von dieser Einstellung nicht betroffen")]
     int minLengthForCorridor;
 
-    [Header("Wahrscheinlichkeiten für die einzelnen Bauteile")]
-    [SerializeField, Range(0f, 1f)] float probabilityCorridor;
-    [SerializeField, Range(0f, 1f)] float probabiliyCorner;
+    [Header("Wahrscheinlichkeiten für die einzelnen Bauteile.")]
+    [SerializeField, Range(0.1f, 1f)] float probabilityCorridor;
+    [SerializeField, Range(0f, 1f)] float probabilityCorner;
     [SerializeField, Range(0f, 1f)] float probabilityEnd;
     [SerializeField, Range(0f, 1f)] float probabilityTCrossing;
     [SerializeField, Range(0f, 1f)] float probabilityXCrossing;
@@ -35,7 +35,7 @@ public class MazeSettings : ScriptableObject
      */
     private void OnValidate()
     {
-        float sum = probabilityCorridor + probabiliyCorner + probabilityEnd + probabilityTCrossing + probabilityXCrossing;
+        float sum = probabilityCorridor + probabilityCorner + probabilityEnd + probabilityTCrossing + probabilityXCrossing;
         if (sum != 1f)
         {
             Debug.LogError("Summe muss 1 ergeben, but is " + sum);
@@ -63,5 +63,19 @@ public class MazeSettings : ScriptableObject
     public int GetMinCorridorLength()
     {
         return minLengthForCorridor;
+    }
+
+    /**
+     * Returns the posibilitys of 
+     * probabilityCorner
+     * probabilityEnd
+     * probabilityTCrossing
+     * probabilityXCrossing
+     * 
+     * When you want to change this order, you also have to change the order in the Maze Generator!!
+     */
+    public (float, float, float, float, float) GetProbabilities()
+    {
+        return (probabilityCorridor, probabilityCorner, probabilityEnd, probabilityTCrossing, probabilityXCrossing);
     }
 }

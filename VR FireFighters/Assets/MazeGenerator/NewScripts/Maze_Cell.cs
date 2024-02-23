@@ -33,23 +33,40 @@ public class Maze_Cell : MonoBehaviour
         this.passageWestOriginal = this.passageWest = passageWest;
     }
 
+
     /**
-     * Setzt ein neues Objekt in die Zelle, sofern dies möglich ist.
-     * Return True, wenn erfolgreich
-     * Return False, falls nicht möglich, es gibt schon ein Objekt oder übergebenes Objekt leer ist.
+     * Prüft, ob ein übergebenes Objekt in die Zelle passt.
+     * Return True, wenn möglich
+     * Return False, falls nicht möglich
      */
-    public bool SetMazeCellObject(int rotaion, MazeCellGameObject obj)
+    public bool CheckForMazeCellObject(int rotation, MazeCellGameObject obj)
     {
         if (obj == null) return false;
         if (!isEmpty) return false;
         if (!CheckObjectFacing(obj)) return false;
 
+
+        //Debug.Log("Check True");
+        return true;
+    }
+
+    /**
+     * Setzt ein neues Objekt in die Zelle, sofern dies möglich ist.
+     * Return True, wenn erfolgreich
+     * Return False, falls nicht möglich, es gibt schon ein Objekt oder übergebenes Objekt leer ist.
+     */
+    public bool SetMazeCellObject(int rotation, MazeCellGameObject obj)
+    {
+        if (!this.CheckForMazeCellObject(rotation, obj)) return false;
+        
+        Debug.Log("Object to set in: " + (obj, rotation));
         passageNorth = obj.GetFaceNorth();
         passageEast = obj.GetFaceEast();
         passageSouth = obj.GetFaceSouth();
         passageWest = obj.GetFaceWest();
         mazeCellObject = obj;
         isEmpty = false;
+
         return true;
     }
 
@@ -150,5 +167,10 @@ public class Maze_Cell : MonoBehaviour
     public bool GetPassageWest()
     {
         return passageWest;
+    }
+
+    public bool GetIsEmpty()
+    {
+        return isEmpty;
     }
 }

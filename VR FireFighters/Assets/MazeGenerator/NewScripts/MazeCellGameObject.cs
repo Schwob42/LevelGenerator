@@ -35,7 +35,7 @@ public class MazeCellGameObject : MonoBehaviour
         switch (degrees)
         {
             case 90:
-            case -90:          // Norden wird nach Osten gedreht
+            case -270:          // Norden wird nach Osten gedreht
                 // Passagen
                 north = faceWest; 
                 east = faceNorth;
@@ -48,7 +48,7 @@ public class MazeCellGameObject : MonoBehaviour
                 doorSouth = doorToEast;
                 doorWest = doorToSouth;
 
-                gameObject.transform.Rotate(new Vector3(0, 90, 0));
+                gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
                 break;
 
             case 180:
@@ -65,11 +65,11 @@ public class MazeCellGameObject : MonoBehaviour
                 doorSouth = doorToNorth;
                 doorWest = doorToEast;
 
-                gameObject.transform.Rotate(new Vector3(0, 180, 0));
+                gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
                 break;
 
             case 270:
-            case -270:          // Norden wird nach Westen gedreht
+            case -90:          // Norden wird nach Westen gedreht
                 // Passagen
                 north = faceEast;
                 east = faceSouth;
@@ -82,7 +82,7 @@ public class MazeCellGameObject : MonoBehaviour
                 doorSouth = doorToWest;
                 doorWest = doorToNorth;
 
-                gameObject.transform.Rotate(new Vector3(0, 270, 0));
+                gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 270, 0));
                 break;
         }
         // Passagen
@@ -91,7 +91,7 @@ public class MazeCellGameObject : MonoBehaviour
         faceSouth = south;
         faceWest = west;
 
-        // West
+        // Door
         doorToNorth = doorNorth;
         doorToEast = doorEast;
         doorToWest = doorWest;

@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d015c2b25617ca47b4dc021bfc40860, type: 3}
   m_Name: Maze Settings
   m_EditorClassIdentifier: 
-  mazeSizeX: 10
-  mazeSizeY: 10
+  mazeSizeX: 30
+  mazeSizeY: 30
   startPositionX: 0
   startPositionY: 0
-  minLengthForCorridor: 0
-  probabilityCorridor: 0.5
-  probabiliyCorner: 0.5
+  minLengthForCorridor: 1
+  probabilityCorridor: 0.4
+  probabilityCorner: 0.2
   probabilityEnd: 0
-  probabilityTCrossing: 0
-  probabilityXCrossing: 0
+  probabilityTCrossing: 0.2
+  probabilityXCrossing: 0.2
   thereShouldBeRooms: 0
   minRoomSize: 0
   maxRoomSize: 0
