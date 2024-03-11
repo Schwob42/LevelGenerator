@@ -324,7 +324,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 466096741875953664}
-  - component: {fileID: 7846880413154297474}
   - component: {fileID: -5747703046643010727}
   m_Layer: 0
   m_Name: Corridor
@@ -352,19 +351,6 @@ Transform:
   - {fileID: 706854498475533702}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7846880413154297474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7033988245785930518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53773be458bde924eaf417a13bb284ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  door: 0
 --- !u!114 &-5747703046643010727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,6 +372,7 @@ MonoBehaviour:
   doorToEast: 0
   doorToSouth: 0
   doorToWest: 0
+  type: 0
 --- !u!1 &7121850613927020801
 GameObject:
   m_ObjectHideFlags: 0

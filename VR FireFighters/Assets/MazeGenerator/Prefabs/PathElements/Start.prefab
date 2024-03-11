@@ -584,6 +584,7 @@ MonoBehaviour:
   doorToEast: 0
   doorToSouth: 0
   doorToWest: 0
+  type: 5
 --- !u!1 &4568343995353596615
 GameObject:
   m_ObjectHideFlags: 0

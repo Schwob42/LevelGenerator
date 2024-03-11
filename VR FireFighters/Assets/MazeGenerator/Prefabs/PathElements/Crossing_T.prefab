@@ -114,7 +114,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5642476049651705970}
-  - component: {fileID: -7135073334395796255}
   - component: {fileID: 3075156549234656672}
   m_Layer: 0
   m_Name: Crossing_T
@@ -143,19 +142,6 @@ Transform:
   - {fileID: 3394512590289542949}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-7135073334395796255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4275445927588428788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53773be458bde924eaf417a13bb284ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  door: 0
 --- !u!114 &3075156549234656672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +163,7 @@ MonoBehaviour:
   doorToEast: 0
   doorToSouth: 0
   doorToWest: 0
+  type: 2
 --- !u!1 &6658643984412963791
 GameObject:
   m_ObjectHideFlags: 0

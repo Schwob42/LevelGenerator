@@ -2,6 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum MazeCellGameObjectType
+{
+    Corridor,
+    Corner,
+    T_Crossing,
+    X_Crossing,
+    End,
+    Start
+}
+
 public class MazeCellGameObject : MonoBehaviour
 {
     [SerializeField]
@@ -12,6 +23,9 @@ public class MazeCellGameObject : MonoBehaviour
 
     [SerializeField]
     private bool doorToNorth, doorToEast, doorToSouth, doorToWest;
+
+    [SerializeField]
+    private MazeCellGameObjectType type;
 
     /*
      * Rotation im Uhrzeigersinn
@@ -96,6 +110,11 @@ public class MazeCellGameObject : MonoBehaviour
         doorToEast = doorEast;
         doorToWest = doorWest;
         doorToSouth = doorSouth;
+    }
+
+    public MazeCellGameObjectType GetMazeCellGameObjectType()
+    {
+        return this.type;
     }
 
     public bool GetFaceNorth()

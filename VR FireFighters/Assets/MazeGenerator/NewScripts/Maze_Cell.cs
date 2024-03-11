@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Maze_Cell : MonoBehaviour
+public class Maze_Cell
 {
     /*
      * True when the cell is empty.
@@ -21,7 +21,7 @@ public class Maze_Cell : MonoBehaviour
     /*
      * The object to set into the cell. Could be null.
      */
-    private MazeCellGameObject mazeCellObject;
+    private MazeCellGameObject mazeCellGameObject;
 
     public Maze_Cell(bool passageNorth, bool passageEast, bool passageSouth, bool passageWest)
     {
@@ -59,12 +59,12 @@ public class Maze_Cell : MonoBehaviour
     {
         if (!this.CheckForMazeCellObject(rotation, obj)) return false;
         
-        Debug.Log("Object to set in: " + (obj, rotation));
+        //Debug.Log("Object to set in: " + (obj, rotation));
         passageNorth = obj.GetFaceNorth();
         passageEast = obj.GetFaceEast();
         passageSouth = obj.GetFaceSouth();
         passageWest = obj.GetFaceWest();
-        mazeCellObject = obj;
+        mazeCellGameObject = obj;
         isEmpty = false;
 
         return true;
@@ -78,7 +78,7 @@ public class Maze_Cell : MonoBehaviour
      */
     public bool RemoveCellObject()
     {
-        if (mazeCellObject == null) return false;
+        if (mazeCellGameObject == null) return false;
 
         passageNorth = passageNorthOriginal;
         passageEast = passageEastOriginal;
@@ -86,7 +86,9 @@ public class Maze_Cell : MonoBehaviour
         passageWest = passageWestOriginal;
 
         isEmpty = true;
-        mazeCellObject = null;
+        UnityEngine.MonoBehaviour.Destroy(mazeCellGameObject.gameObject);
+        mazeCellGameObject = null;
+
         return true;
     }
 
@@ -148,6 +150,12 @@ public class Maze_Cell : MonoBehaviour
 
         return true;
     }
+
+    public MazeCellGameObject GetMazeCellGameObject()
+    {
+        return this.mazeCellGameObject;
+    }
+
 
     public bool GetPassageNorth()
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Maze_Field : MonoBehaviour
+public class Maze_Field
 {
     private Maze_Cell[,] cells;
 
@@ -28,25 +28,25 @@ public class Maze_Field : MonoBehaviour
     {
 
         //Ecken
-        if (x == 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, false);                            //linke untere Ecke
-        else if (x == 0 && y == mazeSizeY) cells[y, x] = new Maze_Cell(false, true, true, false);               //linke obere Ecke
-        else if (x == mazeSizeX && y == mazeSizeY) cells[y, x] = new Maze_Cell(false, false, true, true);       //rechte obere Ecke
-        else if (x == mazeSizeX && y != 0) cells[y, x] = new Maze_Cell(true, false, false, true);               //rechte untere Ecke
+        if (x == 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, false);                                //linke untere Ecke
+        else if (x == 0 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, true, true, false);                 //linke obere Ecke
+        else if (x == mazeSizeX-1 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, false, true, true);       //rechte obere Ecke
+        else if (x == mazeSizeX-1 && y == 0) cells[y, x] = new Maze_Cell(true, false, false, true);                 //rechte untere Ecke
 
         //Ränder
-        else if (x == 0 && y != 0) cells[y, x] = new Maze_Cell(true, true, true, false);                        //linker Rand
-        else if (x != 0 && y == mazeSizeY) cells[y, x] = new Maze_Cell(false, true, true, true);                //oberer Rand
-        else if (x == mazeSizeX && y != mazeSizeY) cells[y, x] = new Maze_Cell(true, false, true, true);        //rechter Rand
-        else if (x != 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, true);                        //unterer Rand
+        else if (x == 0 && y != 0) cells[y, x] = new Maze_Cell(true, true, true, false);                            //linker Rand
+        else if (x != 0 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, true, true, true);                  //oberer Rand
+        else if (x == mazeSizeX-1 && y != mazeSizeY-1) cells[y, x] = new Maze_Cell(true, false, true, true);        //rechter Rand
+        else if (x != 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, true);                            //unterer Rand
 
         //Mitte
-        else cells[y, x] = new Maze_Cell(true, true, true, true);                                               //irgendwo mittendrin
+        else cells[y, x] = new Maze_Cell(true, true, true, true);                                                   //irgendwo mittendrin
 
     }
 
     private MazeCellGameObject CreateCopyOfGameObject(MazeCellGameObject go)
     {
-        MazeCellGameObject mzo = Instantiate(go);
+        MazeCellGameObject mzo = UnityEngine.MonoBehaviour.Instantiate(go);
         mzo.gameObject.SetActive(false);
         return mzo;
     }
@@ -66,13 +66,13 @@ public class Maze_Field : MonoBehaviour
 
         if (!CheckObjectFacing(x, y, mzo))
         {
-            Destroy(mzo.gameObject);
+            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
             return false;
         }
 
         if (!cells[y, x].SetMazeCellObject(rotation, mzo))
         {
-            Destroy(mzo.gameObject);
+            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
             return false;
         }
 
@@ -104,6 +104,8 @@ public class Maze_Field : MonoBehaviour
         if (obj == null) return true;
         //Debug.Log(obj + " " +obj.GetFaceWest());
         // 
+        //Debug.Log("Orientations (" + 9 + "," + 8 + "):" + GetCellAt(9,8).GetPassageNorth() + "," + GetCellAt(9, 8).GetPassageEast() + "," + GetCellAt(9, 8).GetPassageSouth() + "," + GetCellAt(9, 8).GetPassageWest() + ",");
+        
         if (CellExists(x,y-1) && GetCellAt(x,y-1).GetPassageNorth() && !GetCellAt(x,y-1).GetIsEmpty())
         {
             // Passage zur unteren Zelle verbaut?

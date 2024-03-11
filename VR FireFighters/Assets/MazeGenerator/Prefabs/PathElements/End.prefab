@@ -429,7 +429,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6381768117455735016}
-  - component: {fileID: -2245303584387187852}
   - component: {fileID: 2406893657585464411}
   m_Layer: 0
   m_Name: End
@@ -458,19 +457,6 @@ Transform:
   - {fileID: 7429092867326259725}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2245303584387187852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7355002346362531621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53773be458bde924eaf417a13bb284ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  door: 0
 --- !u!114 &2406893657585464411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,6 +478,7 @@ MonoBehaviour:
   doorToEast: 0
   doorToSouth: 0
   doorToWest: 0
+  type: 4
 --- !u!1 &8830302766491777172
 GameObject:
   m_ObjectHideFlags: 0

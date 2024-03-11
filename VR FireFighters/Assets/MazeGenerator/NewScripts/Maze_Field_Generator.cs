@@ -25,10 +25,12 @@ public class Maze_Field_Generator : MonoBehaviour
      * TODO: Remove Start() and add another way to start the generator. UI with a button and so on
      * 
      */
-    private void Start()
+    void Start()
     {
         GenerateField();
     }
+
+   
 
     public void GenerateField()
     {
@@ -44,7 +46,6 @@ public class Maze_Field_Generator : MonoBehaviour
         probabilityXCrossing = probs.Item5;
 
         maze = new Maze_Field(mazeSizeY, mazeSizeY);
-        
         SetEveryCellToDefault();
         
         GeneratePath();
@@ -67,72 +68,114 @@ public class Maze_Field_Generator : MonoBehaviour
 
     private void GeneratePath()
     {
+        
         (int, int) pos = mazeSettings.GetStartPosition();
         int corridorMinLength = mazeSettings.GetMinCorridorLength();
 
-        //bool openPaths = true;
-
         maze.SetGameObjectIntoCell(pos.Item1, pos.Item2, 0, mazeGameObjects.Start);
 
-        SetNextCell(pos.Item1, pos.Item2, corridorMinLength);
+        SetNextCell(null, pos.Item1, pos.Item2, corridorMinLength);
     }
 
     /**
      * Methode für den rekursiven Aufruf zur Pfadgenerierung. 
      * Übergeben wird die Position der letzten Zelle und die noch zu erreichende gewünschte (Ende ist immer erlaubt) minimale Korridorlänge;
      * 
-     * 
+     * previousCell ist die Zelle, aus der die aktuelle Zelle erzeugt wurde. 
      */
-    private void SetNextCell(int x, int y, int corridorMinLength)
+    private void SetNextCell(Maze_Cell previousCell, int x, int y, int corridorMinLength)
     {
-        Maze_Cell mc = maze.GetCellAt(x, y);
+        // Last changed cell on this path
+        Maze_Cell currentCell = maze.GetCellAt(x, y);
 
-        Debug.Log("Looking for " + (x, y) + " " + mc.GetIsEmpty());
+        //Debug.Log(maze);
+
+
+        //Debug.Log("Looking for " + (x, y) + " " + mc.GetIsEmpty());
+
+
 
         if (corridorMinLength > 0)   //Nur Passage oder Ende möglich damit sind nur Orientierungen in entgegengesetzte Richtungen möglich und eine der Richtungen ist bereits belegt (irgendwo kommen wir ja her)
         {
-            if (mc.GetPassageNorth())
+            
+            if (currentCell.GetPassageNorth() && maze.GetCellAt(x, y + 1) != previousCell)
             {
+                //Debug.Log(previousCell+ " und " + maze.GetCellAt(x, y + 1) + " sind gleich:" + (maze.GetCellAt(x, y + 1) == previousCell));
                 if (maze.SetGameObjectIntoCell(x, y + 1, 0, mazeGameObjects.Corridor))
                 {
-                    SetNextCell(x, y + 1, corridorMinLength - 1);
+                    SetNextCell(currentCell, x, y + 1, corridorMinLength - 1);
                 }
                 else
                 {
+                    if ((y + 2 < mazeSizeY) && !maze.GetCellAt(x, y + 2).GetIsEmpty())
+                    {
+                        ChangeZellGameObjectAt(0, x, y + 2);
+                        maze.SetGameObjectIntoCell(x, y + 1, 0, mazeGameObjects.Corridor);
+                        SetNextCell(currentCell, x, y + 1, 0);
+                    }
                     maze.SetGameObjectIntoCell(x, y + 1, 180, mazeGameObjects.End);
                 }
             }
-            if (mc.GetPassageSouth())
+            if (currentCell.GetPassageSouth() && maze.GetCellAt(x, y - 1) != previousCell)
             {
+                //Debug.Log(previousCell + " und " + maze.GetCellAt(x, y + 1) + " sind gleich:" + (maze.GetCellAt(x, y - 1) == previousCell));
+                //Debug.Log("Orientations (" + x + "," + y + "):" + mc.GetPassageNorth() + "," + mc.GetPassageEast() + "," + mc.GetPassageSouth() + "," + mc.GetPassageWest() + ",");
                 if (maze.SetGameObjectIntoCell(x, y - 1, 0, mazeGameObjects.Corridor))
-                {
-                    SetNextCell(x, y - 1, corridorMinLength - 1);
+                {                    
+                    SetNextCell(currentCell, x, y - 1, corridorMinLength - 1);
                 }
                 else
                 {
-                    maze.SetGameObjectIntoCell(x, y - 1, 0, mazeGameObjects.End);
+                    if ((y - 2 >= 0) && !maze.GetCellAt(x, y - 2).GetIsEmpty())
+                    {
+                        ChangeZellGameObjectAt(0, x, y - 2);
+                        maze.SetGameObjectIntoCell(x, y - 1, 0, mazeGameObjects.Corridor);
+                        SetNextCell(currentCell, x, y - 1, 0);
+                    }
+                    else
+                    {
+                        maze.SetGameObjectIntoCell(x, y - 1, 0, mazeGameObjects.End);
+                    }
                 }
             }
-            if (mc.GetPassageEast())
+            if (currentCell.GetPassageEast() && maze.GetCellAt(x+1, y) != previousCell)
             {
                 if (maze.SetGameObjectIntoCell(x + 1, y, 90, mazeGameObjects.Corridor))
                 {
-                    SetNextCell(x + 1, y, corridorMinLength - 1);
+                    SetNextCell(currentCell, x + 1, y, corridorMinLength - 1);
                 }
                 else
                 {
-                    maze.SetGameObjectIntoCell(x + 1, y, -90, mazeGameObjects.End);
+                    if ((x + 2 < mazeSizeX) && !maze.GetCellAt(x + 2, y).GetIsEmpty())
+                    {
+                        ChangeZellGameObjectAt(0, x + 2, y);
+                        maze.SetGameObjectIntoCell(x + 1, y, 90, mazeGameObjects.Corridor);
+                        SetNextCell(currentCell, x + 1, y, 0);
+                    }
+                    else
+                    {
+                        maze.SetGameObjectIntoCell(x + 1, y, -90, mazeGameObjects.End);
+                    }
                 }
             }
-            if (mc.GetPassageWest())
+            if (currentCell.GetPassageWest() && maze.GetCellAt(x-1, y) != previousCell)
             {
                 if (maze.SetGameObjectIntoCell(x - 1, y, 90, mazeGameObjects.Corridor))
                 {
-                    SetNextCell(x - 1, y, corridorMinLength - 1);
+                    SetNextCell(currentCell, x - 1, y, corridorMinLength - 1);
                 }
                 else
                 {
-                    maze.SetGameObjectIntoCell(x - 1, y, 90, mazeGameObjects.End);
+                    if ((x - 2 >= 0) && !maze.GetCellAt(x - 2, y).GetIsEmpty())
+                    {
+                        ChangeZellGameObjectAt(0, x - 2, y);
+                        maze.SetGameObjectIntoCell(x - 1, y, 90, mazeGameObjects.Corridor);
+                        SetNextCell(currentCell, x - 1, y, 0);
+                    }
+                    else
+                    {
+                        maze.SetGameObjectIntoCell(x - 1, y, 90, mazeGameObjects.End);
+                    }
                 }
             }
         }
@@ -155,41 +198,114 @@ public class Maze_Field_Generator : MonoBehaviour
          */
         else   // random object is possible 
         {
-            if (mc.GetPassageNorth() && maze.GetCellAt(x, y + 1).GetIsEmpty())
+            // Norden
+            if (currentCell.GetPassageNorth() && maze.GetCellAt(x, y + 1).GetIsEmpty())
             {
                 // Nach Norden weiterbauen
                 if (FindObjectForCellAt(x, y + 1))
                 {
-                    SetNextCell(x, y + 1, mazeSettings.GetMinCorridorLength());
+                    SetNextCell(currentCell, x, y + 1, mazeSettings.GetMinCorridorLength());
                 }
                 
             }
-            if (mc.GetPassageEast() && maze.GetCellAt(x + 1, y).GetIsEmpty())
+            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnötiges Ende zu verhindern
+            else if (currentCell.GetPassageNorth() && !maze.GetCellAt(x, y + 1).GetIsEmpty() && maze.GetCellAt(x, y + 1) != previousCell)
+            {
+                ChangeZellGameObjectAt(90, x, y+2);
+                // Nach Norden weiterbauen
+                if (FindObjectForCellAt(x, y + 1))
+                {
+                    SetNextCell(currentCell, x, y + 1, mazeSettings.GetMinCorridorLength());
+                }
+            }
+            
+            // Osten
+            if (currentCell.GetPassageEast() && maze.GetCellAt(x + 1, y).GetIsEmpty())
             {
                 // Nach Osten weiterbauen
                 if (FindObjectForCellAt(x+1, y))
                 {
-                    SetNextCell(x+1, y, mazeSettings.GetMinCorridorLength());
+                    SetNextCell(currentCell, x+1, y, mazeSettings.GetMinCorridorLength());
                 }
                     
             }
-            if (mc.GetPassageSouth() && maze.GetCellAt(x, y - 1).GetIsEmpty())
+            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnötiges Ende zu verhindern
+            else if (currentCell.GetPassageEast() && !maze.GetCellAt(x + 1, y).GetIsEmpty() && maze.GetCellAt(x + 1, y) != previousCell)
+            {
+                ChangeZellGameObjectAt(90, x+2, y);
+                // Nach Osten weiterbauen
+                if (FindObjectForCellAt(x + 1, y))
+                {
+                    SetNextCell(currentCell, x + 1, y, mazeSettings.GetMinCorridorLength());
+                }
+            }
+
+            // Süden
+            if (currentCell.GetPassageSouth() && maze.GetCellAt(x, y - 1).GetIsEmpty())
             {
                 // Nach Süden weiterbauen
                 if (FindObjectForCellAt(x, y - 1))
                 {
-                    SetNextCell(x, y - 1, mazeSettings.GetMinCorridorLength());
+                    SetNextCell(currentCell, x, y - 1, mazeSettings.GetMinCorridorLength());
                 }
             }
-            if (mc.GetPassageWest() && maze.GetCellAt(x - 1, y).GetIsEmpty())
+
+            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnötiges Ende zu verhindern
+            else if (currentCell.GetPassageSouth() && !maze.GetCellAt(x, y - 1).GetIsEmpty() && maze.GetCellAt(x, y - 1) != previousCell)
+            {
+                 ChangeZellGameObjectAt(180, x, y-2);
+                // Nach Süden weiterbauen
+                if (FindObjectForCellAt(x, y - 1))
+                {
+                    SetNextCell(currentCell, x, y - 1, mazeSettings.GetMinCorridorLength());
+                }
+            }
+
+            // Westen
+            if (currentCell.GetPassageWest() && maze.GetCellAt(x - 1, y).GetIsEmpty())
             {
                 // Nach Westen weiterbauen
                 if (FindObjectForCellAt(x - 1, y))
                 {
-                    SetNextCell(x - 1, y, mazeSettings.GetMinCorridorLength());
+                    SetNextCell(currentCell, x - 1, y, mazeSettings.GetMinCorridorLength());
+                }
+            }
+            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnötiges Ende zu verhindern
+            else if (currentCell.GetPassageWest() && !maze.GetCellAt(x - 1, y).GetIsEmpty() && maze.GetCellAt(x - 1, y) != previousCell)
+            {
+                 ChangeZellGameObjectAt(90, x-2, y);
+                // Nach Westen weiterbauen
+                if (FindObjectForCellAt(x - 1, y))
+                {
+                    SetNextCell(currentCell, x - 1, y, mazeSettings.GetMinCorridorLength());
                 }
             }
         }
+    }
+
+    /**
+    * Verändert das GameObject in der Zelle zum nächst "hoheren" (Außer wenn es ein Ende, Start oder X-Kreuzung ist)
+    * Coridor und Kurve werden zur T-Kreuzung
+    * T-Kreuzung wird zur X-Kreuzung
+    */
+    private void ChangeZellGameObjectAt(int rotation, int x_NextCell, int y_NextCell)
+    {
+        Maze_Cell mc = maze.GetCellAt(x_NextCell, y_NextCell);
+
+        mc.RemoveCellObject();
+       /* switch (mc.GetMazeCellGameObject().GetMazeCellGameObjectType())
+        {
+            case MazeCellGameObjectType.Corridor:
+            case MazeCellGameObjectType.Corner:
+                mc.RemoveCellObject();
+                //mc.SetMazeCellObject(rotation, mazeGameObjects.X_Crossing);
+                break;
+            case MazeCellGameObjectType.T_Crossing:
+                mc.RemoveCellObject();
+                //mc.SetMazeCellObject(0, mazeGameObjects.X_Crossing);
+                break;
+        }*/
+
     }
 
 
@@ -204,7 +320,10 @@ public class Maze_Field_Generator : MonoBehaviour
         Maze_Cell cellToFill = maze.GetCellAt(x, y);
         
         float maxRange = 0;
+        //Debug.Log("Orientations (" + x + "," + y +"):"  + cellToFill.GetPassageNorth() + "," + cellToFill.GetPassageEast() + "," + cellToFill.GetPassageSouth() + "," + cellToFill.GetPassageWest() + ",");
 
+        // MazeCellObjects that could fit in. But they need not to fit. 
+        // For Example when you need a T_Crossin, a Corridor is also possible but will not fit in.
         List<(MazeCellGameObject, float)> mco = new List<(MazeCellGameObject, float)>();
 
         switch (cellToFill.GetPassageNorth(), cellToFill.GetPassageEast(), cellToFill.GetPassageSouth(), cellToFill.GetPassageWest())
@@ -270,30 +389,44 @@ public class Maze_Field_Generator : MonoBehaviour
         float sum = 0;
 
         MazeCellGameObject objToUse = null;
+        float posiOfObj = 0;
 
-        foreach ((MazeCellGameObject mcgo, float f) in mco)
-        {
-            sum += f;
-            if (randomValue <= sum)
+        while (mco.Count > 0) { 
+            for (int i = 0; i < mco.Count; i++)
             {
-                //Debug.Log("Choice: " + mcgo);
-                objToUse = mcgo;
-                break;
-            }
-        }
-
-        if (!maze.SetGameObjectIntoCell(x,y,0,objToUse))
-        {
-            if (!maze.SetGameObjectIntoCell(x, y, 90, objToUse))
-            {
-                if (!maze.SetGameObjectIntoCell(x, y, 180, objToUse))
+                if (mco[i].Item2 == 0)
                 {
-                    if(!maze.SetGameObjectIntoCell(x, y, 270, objToUse))
+                    // TODO: Besser machen und oben in die switch Case integrieren 
+                    mco.Remove(mco[i]);
+                    i--;
+                    continue;
+                }
+                sum += mco[i].Item2;
+                if (randomValue <= sum)
+                {
+                    //Debug.Log("Choice: " + mco[i].Item1);
+                    objToUse = mco[i].Item1;
+                    posiOfObj = mco[i].Item2;
+                    break;
+                }
+            }
+
+            if (!maze.SetGameObjectIntoCell(x, y, 0, objToUse))
+            {
+                if (!maze.SetGameObjectIntoCell(x, y, 90, objToUse))
+                {
+                    if (!maze.SetGameObjectIntoCell(x, y, 180, objToUse))
                     {
-                        Debug.Log("Nothing was possible " + (x, y, objToUse) + maze.GetCellAt(x, y));
+                        if(!maze.SetGameObjectIntoCell(x, y, 270, objToUse))
+                        {
+                            Debug.Log((x, y, objToUse) + " was not possible ");
+                            mco.Remove((objToUse, posiOfObj));
+                            continue;
+                        }
                     }
                 }
             }
+            break;
         }
 
         if (objToUse.Equals(mazeGameObjects.End))
