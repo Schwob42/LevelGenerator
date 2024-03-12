@@ -77,9 +77,136 @@ public class Maze_Field_Generator : MonoBehaviour
         SetNextCell(null, pos.Item1, pos.Item2, corridorMinLength);
     }
 
+
+    private void GenerateRoom(){
+        //TODO
+    }
+
     /**
-     * Methode für den rekursiven Aufruf zur Pfadgenerierung. 
-     * Übergeben wird die Position der letzten Zelle und die noch zu erreichende gewünschte (Ende ist immer erlaubt) minimale Korridorlänge;
+    * This method will set only one Cell (at the given position)
+    * The method searchs (no random) for a fitting CellGameObject like T_Crossing or X_Crossing
+    *
+    * @parameters 
+    */
+    private void SetNextCellOnly(int x, int y){
+        // The next cell to set
+        Maze_Cell nextCellToSet = maze.GetCellAt(x,y);
+
+        if( nextCellToSet.GetPassageNorth() && maze.GetCellAt(x,y+1).GetPassageSouth() &&   //Passage to the cell in the north is needed
+            nextCellToSet.GetPassageEast() && maze.GetCellAt(x+1,y).GetPassageWest() &&     //Passage to the cell in the east is needed
+            nextCellToSet.GetPassageSouth() && maze.GetCellAt(x,y-1).GetPassageNorth() &&     //Passage to the cell in the south is needed
+            nextCellToSet.GetPassageWest() && maze.GetCellAt(x-1,y).GetPassageEast()     //Passage to the cell in the west is needed
+        ){
+            // All directions needed => X_Crossing is needed
+            nextCellToSet.SetMazeCellObject(0, mazeGameObjects.X_Crossing);
+        }
+        else if(
+            nextCellToSet.GetPassageNorth() && maze.GetCellAt(x,y+1).GetPassageSouth() &&   //Passage to the cell in the north is needed
+            nextCellToSet.GetPassageEast() && maze.GetCellAt(x+1,y).GetPassageWest() &&     //Passage to the cell in the east is needed
+            nextCellToSet.GetPassageSouth() && maze.GetCellAt(x,y-1).GetPassageNorth()     //Passage to the cell in the south is needed
+        ){
+            // All directions except West needed T_Crossing is needed
+            nextCellToSet.SetMazeCellObject(0, mazeGameObjects.X_Crossing);
+        }
+        else if(
+            nextCellToSet.GetPassageSouth() && maze.GetCellAt(x,y-1).GetPassageNorth() &&   //Passage to the cell in the north is needed
+            nextCellToSet.GetPassageEast() && maze.GetCellAt(x+1,y).GetPassageWest() &&     //Passage to the cell in the east is needed
+            nextCellToSet.GetPassageWest() && maze.GetCellAt(x-1,y).GetPassageEast()     //Passage to the cell in the west is needed
+        ){
+            // All directions except North needed T_Crossing is needed
+            nextCellToSet.SetMazeCellObject(90, mazeGameObjects.X_Crossing);
+        }
+        else if( 
+            nextCellToSet.GetPassageNorth() && maze.GetCellAt(x,y+1).GetPassageSouth() &&   //Passage to the cell in the north is needed
+            nextCellToSet.GetPassageSouth() && maze.GetCellAt(x,y-1).GetPassageNorth() &&     //Passage to the cell in the south is needed
+            nextCellToSet.GetPassageWest() && maze.GetCellAt(x-1,y).GetPassageEast()     //Passage to the cell in the west is needed
+        ){
+            // All directions except East needed T_Crossing is needed
+            nextCellToSet.SetMazeCellObject(180, mazeGameObjects.T_Crossing);
+        }
+        else if( 
+            nextCellToSet.GetPassageNorth() && maze.GetCellAt(x,y+1).GetPassageSouth() &&   //Passage to the cell in the north is needed
+            nextCellToSet.GetPassageEast() && maze.GetCellAt(x+1,y).GetPassageWest() &&     //Passage to the cell in the east is needed
+            nextCellToSet.GetPassageWest() && maze.GetCellAt(x-1,y).GetPassageEast()     //Passage to the cell in the west is needed
+        ){
+            // All directions except South needed T_Crossing is needed
+            nextCellToSet.SetMazeCellObject(270, mazeGameObjects.X_Crossing);
+        }
+        else if( 
+            nextCellToSet.GetPassageNorth() && maze.GetCellAt(x,y+1).GetPassageSouth() &&   //Passage to the cell in the north is needed
+            nextCellToSet.GetPassageSouth() && maze.GetCellAt(x,y-1).GetPassageNorth()     //Passage to the cell in the south is needed
+        ){
+            // Corridor is needed
+            nextCellToSet.SetMazeCellObject(0, mazeGameObjects.Corridor);
+        }
+        else if( 
+            nextCellToSet.GetPassageEast() && maze.GetCellAt(x+1,y).GetPassageWest() &&     //Passage to the cell in the east is needed
+            nextCellToSet.GetPassageWest() && maze.GetCellAt(x-1,y).GetPassageEast()     //Passage to the cell in the west is needed
+        ){
+            // Corridor is needed
+            nextCellToSet.SetMazeCellObject(90, mazeGameObjects.Corridor);
+        }
+        else if( 
+            nextCellToSet.GetPassageNorth() && maze.GetCellAt(x,y+1).GetPassageSouth() &&   //Passage to the cell in the north is needed
+            nextCellToSet.GetPassageEast() && maze.GetCellAt(x+1,y).GetPassageWest()     //Passage to the cell in the east is needed
+        ){
+            // Corner is needed
+            nextCellToSet.SetMazeCellObject(0, mazeGameObjects.Corner);
+        }
+        else if(
+            nextCellToSet.GetPassageEast() && maze.GetCellAt(x+1,y).GetPassageWest() &&     //Passage to the cell in the east is needed
+            nextCellToSet.GetPassageSouth() && maze.GetCellAt(x,y-1).GetPassageNorth()     //Passage to the cell in the south is needed
+        ){
+            // Corner is needed
+            nextCellToSet.SetMazeCellObject(90, mazeGameObjects.Corner);
+        }
+        else if(
+            nextCellToSet.GetPassageSouth() && maze.GetCellAt(x,y-1).GetPassageNorth() &&     //Passage to the cell in the south is needed
+            nextCellToSet.GetPassageWest() && maze.GetCellAt(x-1,y).GetPassageEast()     //Passage to the cell in the west is needed
+        ){
+            // Corner is needed
+            nextCellToSet.SetMazeCellObject(180, mazeGameObjects.Corner);
+        }
+        else if( 
+            nextCellToSet.GetPassageNorth() && maze.GetCellAt(x,y+1).GetPassageSouth() &&   //Passage to the cell in the north is needed
+            nextCellToSet.GetPassageWest() && maze.GetCellAt(x-1,y).GetPassageEast()     //Passage to the cell in the west is needed
+        ){
+            // Corner is needed
+            nextCellToSet.SetMazeCellObject(270, mazeGameObjects.Corner);
+        }
+        else if( nextCellToSet.GetPassageNorth() && maze.GetCellAt(x,y+1).GetPassageSouth())    //Passage to the cell in the north is needed
+        {
+            nextCellToSet.SetMazeCellObject(0, mazeGameObjects.End);
+        }
+        else if( nextCellToSet.GetPassageEast() && maze.GetCellAt(x+1,y).GetPassageWest())      //Passage to the cell in the east is needed
+        {
+            nextCellToSet.SetMazeCellObject(90, mazeGameObjects.End);
+        }
+        else if ( nextCellToSet.GetPassageSouth() && maze.GetCellAt(x,y-1).GetPassageNorth())     //Passage to the cell in the south is needed
+        {
+            nextCellToSet.SetMazeCellObject(180, mazeGameObjects.End);
+        }
+        else if( nextCellToSet.GetPassageWest() && maze.GetCellAt(x-1,y).GetPassageEast())      //Passage to the cell in the west is needed
+        {
+            nextCellToSet.SetMazeCellObject(270, mazeGameObjects.End);
+        }
+    }
+
+    /**
+    * This method will set only one Cell (at the given position)
+    * The method searchs for the best a fitting CellGameObject Corridor OR End
+    * The best will is to find a orientation for a corridor. The End will be placed in case there is no other option.
+    *
+    * @parameters 
+    */
+    private void SetCorridorOrEndNextCellOnly(int x, int y){
+
+    }
+
+
+    /**
+     * Methode fÃ¼r den **rekursiven** Aufruf zur Pfadgenerierung. 
+     * Ã¼bergeben wird die Position der letzten Zelle und die noch zu erreichende gewÃ¼nschte (Ende ist immer erlaubt) minimale KorridorlÃ¤nge;
      * 
      * previousCell ist die Zelle, aus der die aktuelle Zelle erzeugt wurde. 
      */
@@ -95,7 +222,7 @@ public class Maze_Field_Generator : MonoBehaviour
 
 
 
-        if (corridorMinLength > 0)   //Nur Passage oder Ende möglich damit sind nur Orientierungen in entgegengesetzte Richtungen möglich und eine der Richtungen ist bereits belegt (irgendwo kommen wir ja her)
+        if (corridorMinLength > 0)   //Nur Passage oder Ende mï¿½glich damit sind nur Orientierungen in entgegengesetzte Richtungen mï¿½glich und eine der Richtungen ist bereits belegt (irgendwo kommen wir ja her)
         {
             
             if (currentCell.GetPassageNorth() && maze.GetCellAt(x, y + 1) != previousCell)
@@ -189,7 +316,7 @@ public class Maze_Field_Generator : MonoBehaviour
          *     |     
          *     |
          *     
-         * Könnte zu 
+         * Kï¿½nnte zu 
          * ----x---- (soll eine Kreuzung sein) 
          *     |     
          *     |
@@ -208,15 +335,12 @@ public class Maze_Field_Generator : MonoBehaviour
                 }
                 
             }
-            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnötiges Ende zu verhindern
+            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnï¿½tiges Ende zu verhindern
             else if (currentCell.GetPassageNorth() && !maze.GetCellAt(x, y + 1).GetIsEmpty() && maze.GetCellAt(x, y + 1) != previousCell)
             {
                 ChangeZellGameObjectAt(90, x, y+2);
-                // Nach Norden weiterbauen
-                if (FindObjectForCellAt(x, y + 1))
-                {
-                    SetNextCell(currentCell, x, y + 1, mazeSettings.GetMinCorridorLength());
-                }
+                FindObjectForCellAt(x,y+1);
+                SetNextCellOnly(x,y+2);
             }
             
             // Osten
@@ -229,36 +353,32 @@ public class Maze_Field_Generator : MonoBehaviour
                 }
                     
             }
-            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnötiges Ende zu verhindern
+            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnï¿½tiges Ende zu verhindern
             else if (currentCell.GetPassageEast() && !maze.GetCellAt(x + 1, y).GetIsEmpty() && maze.GetCellAt(x + 1, y) != previousCell)
             {
                 ChangeZellGameObjectAt(90, x+2, y);
                 // Nach Osten weiterbauen
-                if (FindObjectForCellAt(x + 1, y))
-                {
-                    SetNextCell(currentCell, x + 1, y, mazeSettings.GetMinCorridorLength());
-                }
+                FindObjectForCellAt(x + 1, y);
+                SetNextCellOnly(x+2,y);
             }
 
-            // Süden
+            // Sï¿½den
             if (currentCell.GetPassageSouth() && maze.GetCellAt(x, y - 1).GetIsEmpty())
             {
-                // Nach Süden weiterbauen
+                // Nach Sï¿½den weiterbauen
                 if (FindObjectForCellAt(x, y - 1))
                 {
                     SetNextCell(currentCell, x, y - 1, mazeSettings.GetMinCorridorLength());
                 }
             }
 
-            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnötiges Ende zu verhindern
+            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnï¿½tiges Ende zu verhindern
             else if (currentCell.GetPassageSouth() && !maze.GetCellAt(x, y - 1).GetIsEmpty() && maze.GetCellAt(x, y - 1) != previousCell)
             {
                  ChangeZellGameObjectAt(180, x, y-2);
-                // Nach Süden weiterbauen
-                if (FindObjectForCellAt(x, y - 1))
-                {
-                    SetNextCell(currentCell, x, y - 1, mazeSettings.GetMinCorridorLength());
-                }
+                // Nach Sï¿½den weiterbauen
+                FindObjectForCellAt(x, y - 1);
+                SetNextCellOnly(x,y-2);
             }
 
             // Westen
@@ -270,21 +390,19 @@ public class Maze_Field_Generator : MonoBehaviour
                     SetNextCell(currentCell, x - 1, y, mazeSettings.GetMinCorridorLength());
                 }
             }
-            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnötiges Ende zu verhindern
+            // Zelle von Zellenobjekt belegt => Umbauen, um ein unnï¿½tiges Ende zu verhindern
             else if (currentCell.GetPassageWest() && !maze.GetCellAt(x - 1, y).GetIsEmpty() && maze.GetCellAt(x - 1, y) != previousCell)
             {
                  ChangeZellGameObjectAt(90, x-2, y);
                 // Nach Westen weiterbauen
-                if (FindObjectForCellAt(x - 1, y))
-                {
-                    SetNextCell(currentCell, x - 1, y, mazeSettings.GetMinCorridorLength());
-                }
+                FindObjectForCellAt(x - 1, y);
+                SetNextCellOnly(x-2,y);
             }
         }
     }
 
     /**
-    * Verändert das GameObject in der Zelle zum nächst "hoheren" (Außer wenn es ein Ende, Start oder X-Kreuzung ist)
+    * Verï¿½ndert das GameObject in der Zelle zum nï¿½chst "hoheren" (Auï¿½er wenn es ein Ende, Start oder X-Kreuzung ist)
     * Coridor und Kurve werden zur T-Kreuzung
     * T-Kreuzung wird zur X-Kreuzung
     */

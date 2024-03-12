@@ -33,7 +33,7 @@ public class Maze_Field
         else if (x == mazeSizeX-1 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, false, true, true);       //rechte obere Ecke
         else if (x == mazeSizeX-1 && y == 0) cells[y, x] = new Maze_Cell(true, false, false, true);                 //rechte untere Ecke
 
-        //Ränder
+        //Rï¿½nder
         else if (x == 0 && y != 0) cells[y, x] = new Maze_Cell(true, true, true, false);                            //linker Rand
         else if (x != 0 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, true, true, true);                  //oberer Rand
         else if (x == mazeSizeX-1 && y != mazeSizeY-1) cells[y, x] = new Maze_Cell(true, false, true, true);        //rechter Rand
@@ -52,9 +52,9 @@ public class Maze_Field
     }
 
     /**
-     * Versucht ein übergebenes Object dem Maze hinzuzufügen.
+     * Versucht ein ï¿½bergebenes Object dem Maze hinzuzufï¿½gen.
      * 
-     * Gibt True zurück, wenn es funktioniert hat,
+     * Gibt True zurï¿½ck, wenn es funktioniert hat,
      * False, wenn nicht.
      * 
      */
@@ -85,15 +85,15 @@ public class Maze_Field
 
 
     /**
-     * Die Methode prüft, ob ein übergebenes Objekt in eine leere Zelle passt ohne, dass es Widersprüche zu Nachbarzellen gibt.
+     * Die Methode prï¿½ft, ob ein ï¿½bergebenes Objekt in eine leere Zelle passt ohne, dass es Widersprï¿½che zu Nachbarzellen gibt.
      * Sollte es in die jeweilige Richtung keine Zelle geben, wird False ausgegeben. 
      * TODO: Drehung veranlassen! (Im Generator)
      * 
-     * Es wird erst geprüft, ob es vom Objekt aus eine Orientierung nach Norden, Osten, Süden oder Westen gibt und wenn ja
-     * wird überprüft, ob die Zelle dort eine entgegengesetzt Öffnung hat.
-     * Sprich, wir wollen bspw. einen Corridor (ohne Drehung) einfügen, dann schauen wir in der Zelle darüber, ob sie eine Passage nach Süden hat und in der Zelle darunter, 
+     * Es wird erst geprï¿½ft, ob es vom Objekt aus eine Orientierung nach Norden, Osten, Sï¿½den oder Westen gibt und wenn ja
+     * wird ï¿½berprï¿½ft, ob die Zelle dort eine entgegengesetzt ï¿½ffnung hat.
+     * Sprich, wir wollen bspw. einen Corridor (ohne Drehung) einfï¿½gen, dann schauen wir in der Zelle darï¿½ber, ob sie eine Passage nach Sï¿½den hat und in der Zelle darunter, 
      * ob sie eine Passage nach Norden hat. 
-     * TODO: Bild dazu machen. Vllt fällt da außer mir noch jemand drauf rein ^^ 
+     * TODO: Bild dazu machen. Vllt fï¿½llt da auï¿½er mir noch jemand drauf rein ^^ 
      * 
      * Returns TRUE when everything is fine
      * FALSE else. 
@@ -141,7 +141,7 @@ public class Maze_Field
             //Debug.Log("East good");
         }
 
-        if (obj.GetFaceSouth())     // Wenn das Objekt eine Passage nach Süden hat
+        if (obj.GetFaceSouth())     // Wenn das Objekt eine Passage nach Sï¿½den hat
         {
             if (y <= 0) return false;   //out of maze
             if (obj.GetFaceSouth() != cells[y - 1, x].GetPassageNorth()) return false;
@@ -161,6 +161,9 @@ public class Maze_Field
 
     public Maze_Cell GetCellAt(int x, int y)
     {
+        if(x < 0 || x > mazeSizeX || y<0 || y> mazeSizeY){
+            return null;
+        }
         return cells[y, x];
     }
 

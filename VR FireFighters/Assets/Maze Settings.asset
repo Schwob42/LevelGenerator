@@ -17,11 +17,11 @@ MonoBehaviour:
   startPositionX: 5
   startPositionY: 5
   minLengthForCorridor: 3
-  probabilityCorridor: 0.3
-  probabilityCorner: 0.4
-  probabilityEnd: 0
-  probabilityTCrossing: 0.2
+  probabilityCorridor: 0.7
+  probabilityCorner: 0.09
+  probabilityEnd: 0.01
+  probabilityTCrossing: 0.1
   probabilityXCrossing: 0.1
-  thereShouldBeRooms: 0
+  thereShouldBeRooms: 1
   minRoomSize: 0
   maxRoomSize: 0

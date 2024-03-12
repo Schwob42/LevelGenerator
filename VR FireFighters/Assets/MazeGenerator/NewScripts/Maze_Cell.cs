@@ -35,9 +35,9 @@ public class Maze_Cell
 
 
     /**
-     * Prüft, ob ein übergebenes Objekt in die Zelle passt.
-     * Return True, wenn möglich
-     * Return False, falls nicht möglich
+     * Prï¿½ft, ob ein ï¿½bergebenes Objekt in die Zelle passt.
+     * Return True, wenn mï¿½glich
+     * Return False, falls nicht mï¿½glich
      */
     public bool CheckForMazeCellObject(int rotation, MazeCellGameObject obj)
     {
@@ -51,9 +51,9 @@ public class Maze_Cell
     }
 
     /**
-     * Setzt ein neues Objekt in die Zelle, sofern dies möglich ist.
+     * Setzt ein neues Objekt in die Zelle, sofern dies mï¿½glich ist.
      * Return True, wenn erfolgreich
-     * Return False, falls nicht möglich, es gibt schon ein Objekt oder übergebenes Objekt leer ist.
+     * Return False, falls nicht mï¿½glich, es gibt schon ein Objekt oder ï¿½bergebenes Objekt leer ist.
      */
     public bool SetMazeCellObject(int rotation, MazeCellGameObject obj)
     {
@@ -73,7 +73,7 @@ public class Maze_Cell
     /**
      * Entfernt das GameObject in der Zelle, sofern vorhanden.
      * 
-     * Gibt True zurück, sofern ein Objekt entfernt wurde,
+     * Gibt True zurï¿½ck, sofern ein Objekt entfernt wurde,
      * False, wenn kein Objekt entfernt werden konnte. 
      */
     public bool RemoveCellObject()
@@ -94,16 +94,16 @@ public class Maze_Cell
 
 
     /**
-     * Die Methode prüft, ob ein übergebenes Objekt in eine leere Zelle passt ohne, dass Wände und Gänge kollifieren.
+     * Die Methode prï¿½ft, ob ein ï¿½bergebenes Objekt in eine leere Zelle passt ohne, dass Wï¿½nde und Gï¿½nge kollifieren.
      * 
-     * Es wird erst geprüft, ob es vom Objekt aus eine Orientierung nach Norden, Osten, Süden oder Westen gibt und wenn ja
-     * wird überprüft, ob die Zelle dort ebenfalls eine offene Ausrichtung hat. 
-     * Im weiteren Verlauf wird dasselbe mit den Türen des Objekts gemacht, sofern das Objekt Türen hat.
+     * Es wird erst geprï¿½ft, ob es vom Objekt aus eine Orientierung nach Norden, Osten, Sï¿½den oder Westen gibt und wenn ja
+     * wird ï¿½berprï¿½ft, ob die Zelle dort ebenfalls eine offene Ausrichtung hat. 
+     * Im weiteren Verlauf wird dasselbe mit den Tï¿½ren des Objekts gemacht, sofern das Objekt Tï¿½ren hat.
      * 
      * Returns TRUE when everything is fine
      * FALSE else.
      * 
-     * TODO: Es müssten eigentlich auch noch die Nachbarzellen überprüft werden -> Muss im Maze selbst passieren
+     * TODO: Es mï¿½ssten eigentlich auch noch die Nachbarzellen ï¿½berprï¿½ft werden -> Muss im Maze selbst passieren
      */
     private bool CheckObjectFacing(MazeCellGameObject obj)
     {
@@ -125,8 +125,8 @@ public class Maze_Cell
             if (obj.GetFaceWest() != passageWest) return false;
         }
 
-        // Türen
-        if (!obj.objectHasDoor())   // fall das Objekt keine Türen hat, wird der Rest übersprungen
+        // Tï¿½ren
+        if (!obj.objectHasDoor())   // fall das Objekt keine Tï¿½ren hat, wird der Rest ï¿½bersprungen
         {
             return true;
         }
