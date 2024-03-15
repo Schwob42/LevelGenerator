@@ -11,6 +11,9 @@ public class LevelGenerator : MonoBehaviour
 
     [SerializeField] 
     MazeCellGameObjects pathGameObjects;
+
+    // List of coordinates of cells that can't get filled.
+    private List<(int x, int y)> redos = new List<(int x,  int y)>();
     
     
     private Maze_Field level;
@@ -51,6 +54,8 @@ public class LevelGenerator : MonoBehaviour
         SetEveryCellToDefault();
         
         StartPathGeneration();
+
+        FixRedos();
     }
 
     /**
@@ -80,12 +85,18 @@ public class LevelGenerator : MonoBehaviour
 
         level.SetGameObjectIntoCell(pos.Item1, pos.Item2, 0, pathGameObjects.Start);
 
-        SetNextCell(pos.Item1, pos.Item2, corridorMinLength, null);
+        SetNextCell(pos.Item1, pos.Item2, corridorMinLength, null, true);
+    }
+
+    private void FixRedos(){
+        if(redos.Count == 0) return;
+        foreach((int x, int y) coordinates in redos){
+            SetRandomPathObjectToCell(coordinates.x, coordinates.y, false);
+        }
     }
 
 
-
-    private void SetNextCell (int x_Position, int y_Position, int corridorMinLength, Maze_Cell previousCell){
+    private void SetNextCell (int x_Position, int y_Position, int corridorMinLength, Maze_Cell previousCell, bool recursive){
         // The last setted cell. So the cell that was buildet by the previousCell
         Maze_Cell lastCell = level.GetCellAt(x_Position, y_Position);
 
@@ -100,7 +111,7 @@ public class LevelGenerator : MonoBehaviour
             if(corridorMinLength > 0){
                 // Only corridors and end are allowed
                 if(SetCorridorFor(x_Position, y_Position + 1, Orientation.North)){
-                    SetNextCell(x_Position, y_Position + 1, corridorMinLength - 1, lastCell);
+                    SetNextCell(x_Position, y_Position + 1, corridorMinLength - 1, lastCell, true);
                 }
                 else {
                     // recursion stops here, because of a set end ore something went wrong (collision with neighbor)
@@ -111,12 +122,12 @@ public class LevelGenerator : MonoBehaviour
                 if(SetRandomPathObjectToCell(x_Position, y_Position + 1)){
                     if(level.GetCellAt(x_Position, y_Position + 1).GetMazeCellGameObject().GetMazeCellGameObjectType() == MazeCellGameObjectType.Corridor){
                         // Extra corridor for the corridor length
-                        SetNextCell(x_Position, y_Position + 1, 0, lastCell);
+                        SetNextCell(x_Position, y_Position + 1, 0, lastCell, true);
                     }
                     else
                     {
                         // Now we need corridor(s) again (depending on the settings)
-                        SetNextCell(x_Position, y_Position + 1, generationSettings.GetMinCorridorLength(), lastCell);
+                        SetNextCell(x_Position, y_Position + 1, generationSettings.GetMinCorridorLength(), lastCell, true);
                     }
                     
                 }
@@ -131,7 +142,7 @@ public class LevelGenerator : MonoBehaviour
             if(corridorMinLength > 0){
                 // Only corridors and end are allowed
                 if(SetCorridorFor(x_Position + 1, y_Position, Orientation.East)){
-                    SetNextCell(x_Position + 1, y_Position, corridorMinLength - 1, lastCell);
+                    SetNextCell(x_Position + 1, y_Position, corridorMinLength - 1, lastCell, true);
                 }
                 else {
                     // recursion stops here, because of a set end
@@ -142,12 +153,12 @@ public class LevelGenerator : MonoBehaviour
                 if(SetRandomPathObjectToCell(x_Position + 1, y_Position)){
                     if(level.GetCellAt(x_Position + 1, y_Position).GetMazeCellGameObject().GetMazeCellGameObjectType() == MazeCellGameObjectType.Corridor){
                         // Extra corridor for the corridor length
-                        SetNextCell(x_Position + 1, y_Position, 0, lastCell);
+                        SetNextCell(x_Position + 1, y_Position, 0, lastCell, true);
                     }
                     else
                     {
                         // Now we need corridor(s) again (depending on the settings)
-                        SetNextCell(x_Position + 1, y_Position, generationSettings.GetMinCorridorLength(), lastCell);
+                        SetNextCell(x_Position + 1, y_Position, generationSettings.GetMinCorridorLength(), lastCell, true);
                     }
                     
                 }
@@ -164,7 +175,7 @@ public class LevelGenerator : MonoBehaviour
             if(corridorMinLength > 0){
                 // Only corridors and end are allowed
                 if(SetCorridorFor(x_Position, y_Position - 1, Orientation.South)){
-                    SetNextCell(x_Position, y_Position - 1, corridorMinLength - 1, lastCell);
+                    SetNextCell(x_Position, y_Position - 1, corridorMinLength - 1, lastCell, true);
                 }
                 else {
                     // recursion stops here, because of a set end
@@ -175,12 +186,12 @@ public class LevelGenerator : MonoBehaviour
                 if(SetRandomPathObjectToCell(x_Position, y_Position - 1)){
                     if(level.GetCellAt(x_Position, y_Position - 1).GetMazeCellGameObject().GetMazeCellGameObjectType() == MazeCellGameObjectType.Corridor){
                         // Extra corridor for the corridor length
-                        SetNextCell(x_Position, y_Position - 1, 0, lastCell);
+                        SetNextCell(x_Position, y_Position - 1, 0, lastCell, true);
                     }
                     else
                     {
                         // Now we need corridor(s) again (depending on the settings)
-                        SetNextCell(x_Position, y_Position - 1, generationSettings.GetMinCorridorLength(), lastCell);
+                        SetNextCell(x_Position, y_Position - 1, generationSettings.GetMinCorridorLength(), lastCell, true);
                     }
                     
                 }
@@ -195,7 +206,7 @@ public class LevelGenerator : MonoBehaviour
             if(corridorMinLength > 0){
                 // Only corridors and end are allowed
                 if(SetCorridorFor(x_Position - 1, y_Position, Orientation.West)){
-                    SetNextCell(x_Position - 1, y_Position, corridorMinLength - 1, lastCell);
+                    SetNextCell(x_Position - 1, y_Position, corridorMinLength - 1, lastCell, true);
                 }
                 else {
                     // recursion stops here, because of a set end
@@ -206,12 +217,12 @@ public class LevelGenerator : MonoBehaviour
                 if(SetRandomPathObjectToCell(x_Position - 1, y_Position)){
                     if(level.GetCellAt(x_Position - 1, y_Position).GetMazeCellGameObject().GetMazeCellGameObjectType() == MazeCellGameObjectType.Corridor){
                         // Extra corridor for the corridor length
-                        SetNextCell(x_Position - 1, y_Position, 0, lastCell);
+                        SetNextCell(x_Position - 1, y_Position, 0, lastCell, true);
                     }
                     else
                     {
                         // Now we need corridor(s) again (depending on the settings)
-                        SetNextCell(x_Position - 1, y_Position, generationSettings.GetMinCorridorLength(), lastCell);
+                        SetNextCell(x_Position - 1, y_Position, generationSettings.GetMinCorridorLength(), lastCell, true);
                     }
                     
                 }
@@ -238,61 +249,88 @@ public class LevelGenerator : MonoBehaviour
         switch (orientation){  
             case Orientation.North:              
                 if(y < levelSizeY-1 && mc.GetPassageNorth() && mc.GetPassageSouth() && level.GetCellAt(x, y + 1).GetPassageSouth()){
-                    return level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.Corridor);
+                    if (!level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.Corridor)){
+                        redos.Add((x, y));
+                        return false;
+                    }
+                    return true;
                 }
                 else if (y < levelSizeY-1){
                     if( RemoveAndReplace(x, y+1, orientation)){
                         return level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.Corridor);
                     }
                     else {
-                        level.SetGameObjectIntoCell(x, y, 180, pathGameObjects.End);
+                        if(!level.SetGameObjectIntoCell(x, y, 180, pathGameObjects.End)){
+                            redos.Add((x, y));
+                        }
                         return false;
                     }
                 }
                 else {
-                    level.SetGameObjectIntoCell(x, y, 180, pathGameObjects.End);
-                        return false;
+                    if(!level.SetGameObjectIntoCell(x, y, 180, pathGameObjects.End)){
+                        redos.Add((x, y));
+                    }
+                    return false;
                 }
 
             case Orientation.East:
                 if(x < levelSizeX-1 && mc.GetPassageEast() && mc.GetPassageWest() && level.GetCellAt(x + 1, y).GetPassageWest()){
-                    return level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.Corridor);
+                    if (!level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.Corridor)){
+                        redos.Add((x, y));
+                        return false;
+                    }
+                    return true;
                 }
                 else if (x < levelSizeX-1){
                     if( RemoveAndReplace(x + 1, y, orientation)){
                         return level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.Corridor);
                     }
                     else {
-                        level.SetGameObjectIntoCell(x, y, 270, pathGameObjects.End);
+                        if(!level.SetGameObjectIntoCell(x, y, 270, pathGameObjects.End)){
+                            redos.Add((x, y));
+                        }
                         return false;
                     }
                 }
                 else {
-                    level.SetGameObjectIntoCell(x, y, 270, pathGameObjects.End);
+                    if(!level.SetGameObjectIntoCell(x, y, 270, pathGameObjects.End)){
+                        redos.Add((x, y));
+                    }
                     return false;
                 }
 
             case Orientation.South:
                 if(y > 0 && mc.GetPassageNorth() && mc.GetPassageSouth() && level.GetCellAt(x, y - 1).GetPassageNorth()){
-                    return level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.Corridor);
+                    if (!level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.Corridor)){
+                        redos.Add((x, y));
+                        return false;
+                    }
+                    return true;
                 }
                 else if (y > 0){
                     if( RemoveAndReplace(x, y - 1, orientation)){
                         return level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.Corridor);
                     }
                     else {
-                        level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.End);
+                        if(!level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.End)){
+                            redos.Add((x, y));
+                        }
                         return false;
                     }
                 }
                 else {
-                    level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.End);
+                    if(!level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.End)){
+                        redos.Add((x, y));
+                    }
                     return false;
                 }
 
             case Orientation.West:
                 if(x > 0 && mc.GetPassageEast() && mc.GetPassageWest() && level.GetCellAt(x - 1, y).GetPassageEast()){
-                    level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.Corridor);
+                    if (!level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.Corridor)){
+                        redos.Add((x, y));
+                        return false;
+                    }
                     return true;
                 }
                 else if (x > 0){
@@ -300,11 +338,16 @@ public class LevelGenerator : MonoBehaviour
                         return level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.Corridor);
                     }
                     else {
-                        return level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.End);
+                        if(!level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.End)){
+                            redos.Add((x, y));
+                        }
+                        return false;
                     }
                 }
                 else {
-                    level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.End);
+                    if(!level.SetGameObjectIntoCell(x, y, 90, pathGameObjects.End)){
+                        redos.Add((x, y));
+                    }
                     return false;
                 }
         }
@@ -418,10 +461,12 @@ public class LevelGenerator : MonoBehaviour
     /**
     Sets a random (depending on the settings in LevelSettings) PathGameObject to the given cell 
 
+    @params insertToRedosIfNeeded is needed to prevent to insert the same coordinate twice (by FixRedo()). **Only FixRedo() calls this method with insertToRedosIfNeeded=false!!!**
+
     Returns false if an end was set.
     Returns true else
     */
-    private bool SetRandomPathObjectToCell (int x, int y){
+    private bool SetRandomPathObjectToCell (int x, int y, bool insertToRedosIfNeeded = true){
 
         Maze_Cell cellToFill = level.GetCellAt(x, y);
         
@@ -522,7 +567,7 @@ public class LevelGenerator : MonoBehaviour
                 if(!level.SetGameObjectIntoCell(x, y, 90, objToUse)){
                     if(!level.SetGameObjectIntoCell(x, y, 180, objToUse)){
                         if(!level.SetGameObjectIntoCell(x, y, 270, objToUse)){
-                            Debug.Log((x, y, objToUse ) + " nothing was possible ");
+                            //Debug.Log((x, y, objToUse ) + " nothing was possible ");
                             mco.Remove((objToUse, objPos));
                             maxRange -= objPos;
                         }
@@ -535,6 +580,11 @@ public class LevelGenerator : MonoBehaviour
             else return true;
 
            
+        }
+        
+        if(insertToRedosIfNeeded) {
+            Debug.Log("Added " + (x, y));
+            redos.Add((x, y));
         }
         return false;
     }
