@@ -85,6 +85,39 @@ public class Maze_Field
         return true;
     }
 
+    public bool SetRoomObjectIntoCell(int x, int y, int rotation, MazeCellGameObject roomObject){
+        Debug.Log("I've got an " + roomObject + " for " + (x, y, rotation));
+        MazeCellGameObject mzo = CreateCopyOfGameObject(roomObject);
+        mzo.RotateObject(rotation);
+
+        if (!CheckRoomFacing(x, y, mzo))
+        {
+            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
+            return false;
+        }
+
+        if (!cells[y, x].SetMazeCellRoomObject(rotation, mzo))
+        {
+            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
+            return false;
+        }
+
+        mzo.transform.position = new Vector3(x*2, 1, y*2);
+        mzo.gameObject.SetActive(true);
+        //mzo.transform.rotation = Quaternion.Euler(new Vector3(0,rotation,0));
+
+        return true;
+    }
+
+    private bool CheckRoomFacing(int x, int y, MazeCellGameObject obj){
+        if (obj == null) return true;
+
+        
+        
+        //Debug.Log("All good");
+        return true;
+    }
+
 
     /**
      * Die Methode pr�ft, ob ein �bergebenes Objekt in eine leere Zelle passt ohne, dass es Widerspr�che zu Nachbarzellen gibt.

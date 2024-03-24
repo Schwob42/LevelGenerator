@@ -10,7 +10,8 @@ public enum MazeCellGameObjectType
     T_Crossing,
     X_Crossing,
     End,
-    Start
+    Start,
+    Room
 }
 
 public class MazeCellGameObject : MonoBehaviour
@@ -21,6 +22,10 @@ public class MazeCellGameObject : MonoBehaviour
     [SerializeField]
     private bool hasDoor;
 
+    /**
+    * TRUE if there is a door in the respective direction,
+    * False if not
+    */
     [SerializeField]
     private bool doorToNorth, doorToEast, doorToSouth, doorToWest;
 
@@ -30,7 +35,7 @@ public class MazeCellGameObject : MonoBehaviour
     /*
      * Rotation im Uhrzeigersinn
      * Norden wird Osten
-     * Osten wird Süden
+     * Osten wird Sï¿½den
      * usw.
      */
     public void RotateObject(int degrees)
@@ -56,7 +61,7 @@ public class MazeCellGameObject : MonoBehaviour
                 south = faceEast; 
                 west = faceSouth;
 
-                //Türen
+                //Tï¿½ren
                 doorNorth = doorToWest;
                 doorEast = doorToNorth;
                 doorSouth = doorToEast;
@@ -66,14 +71,14 @@ public class MazeCellGameObject : MonoBehaviour
                 break;
 
             case 180:
-            case -180:          // Norden wird nach Süden gedreht
+            case -180:          // Norden wird nach Sï¿½den gedreht
                 // Passagen
                 north = faceSouth;
                 east = faceWest;
                 south = faceNorth;
                 west = faceEast;
 
-                // Türen
+                // Tï¿½ren
                 doorNorth = doorToSouth;
                 doorEast = doorToWest;
                 doorSouth = doorToNorth;
@@ -90,7 +95,7 @@ public class MazeCellGameObject : MonoBehaviour
                 south = faceWest;
                 west = faceNorth;
 
-                // Türen
+                // Tï¿½ren
                 doorNorth = doorToEast;
                 doorEast = doorToSouth;
                 doorSouth = doorToWest;

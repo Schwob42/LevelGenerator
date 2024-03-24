@@ -77,6 +77,19 @@ public class Maze_Cell
         return true;
     }
 
+    public bool SetMazeCellRoomObject(int rotation, MazeCellGameObject obj){
+        if (!this.CheckForMazeCellObject(0, obj)) return false;
+        passageNorth = obj.GetFaceNorth();
+        passageEast = obj.GetFaceEast();
+        passageSouth = obj.GetFaceSouth();
+        passageWest = obj.GetFaceWest();
+        mazeCellGameObject = obj;
+        mazeCellState = MazeCellState.Room;
+
+        return true;
+    }
+
+
     /**
      * Entfernt das GameObject in der Zelle, sofern vorhanden.
      * 

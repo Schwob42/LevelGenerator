@@ -12,19 +12,19 @@ public class MazeSettings : ScriptableObject
     [SerializeField, Range(0, 50)]
     int startPositionX, startPositionY;
 
-    [SerializeField, Range(0, 10), Tooltip("Minimale Länge eines Korridors, bis eine Kreuzung oder Kurve kommen darf. Enden sind von dieser Einstellung nicht betroffen")]
+    [SerializeField, Range(0, 10), Tooltip("Minimale Lï¿½nge eines Korridors, bis eine Kreuzung oder Kurve kommen darf. Enden sind von dieser Einstellung nicht betroffen")]
     int minLengthForCorridor;
 
-    [Header("Wahrscheinlichkeiten für die einzelnen Bauteile.")]
+    [Header("Wahrscheinlichkeiten fï¿½r die einzelnen Bauteile.")]
     [SerializeField, Range(0.1f, 1f)] float probabilityCorridor;
     [SerializeField, Range(0f, 1f)] float probabilityCorner;
     [SerializeField, Range(0f, 1f)] float probabilityEnd;
     [SerializeField, Range(0f, 1f)] float probabilityTCrossing;
     [SerializeField, Range(0f, 1f)] float probabilityXCrossing;
 
-    [Header("Einstellungen für Räume")]
+    [Header("Einstellungen fï¿½r Rï¿½ume")]
     [SerializeField] bool thereShouldBeRooms;
-    [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int minRoomSize, maxRoomSize;
+    [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int minRoomWidth, maxRoomWidth, minRoomLength, maxRoomLength;
 
 
     /**
@@ -41,9 +41,9 @@ public class MazeSettings : ScriptableObject
             Debug.LogError("Summe muss 1 ergeben, but is " + sum);
         }
 
-        if(minRoomSize > maxRoomSize)
+        if(minRoomLength > maxRoomLength || minRoomWidth > maxRoomWidth)
         {
-            Debug.LogError("Es ergibt wohl nur wenig Sinn, wenn Minimum größer Maximum sein soll ;)");
+            Debug.LogError("Es ergibt wohl nur wenig Sinn, wenn Minimum grï¿½ï¿½er Maximum sein soll ;)");
         }
 
         if (startPositionX > mazeSizeX - 1) Debug.LogError("StartPositionX sollte < mazeSizeX sein");
@@ -63,6 +63,10 @@ public class MazeSettings : ScriptableObject
     public int GetMinCorridorLength()
     {
         return minLengthForCorridor;
+    }
+
+    public (int minRoomWidth, int maxRoomWidth, int minRoomLength, int maxRoomLength) GetRoomSettings(){
+        return (minRoomWidth, maxRoomWidth, minRoomLength, maxRoomLength);
     }
 
     /**
