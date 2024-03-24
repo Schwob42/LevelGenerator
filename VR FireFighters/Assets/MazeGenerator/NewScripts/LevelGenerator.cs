@@ -50,7 +50,7 @@ public class LevelGenerator : MonoBehaviour
         probabilityTCrossing = probs.Item4;
         probabilityXCrossing = probs.Item5;
 
-        level = new Maze_Field(levelSizeY, levelSizeY);
+        level = new Maze_Field(levelSizeX, levelSizeY);
         SetEveryCellToDefault();
         
         StartPathGeneration();
@@ -103,7 +103,7 @@ public class LevelGenerator : MonoBehaviour
         if(                                                                         // Nach Norden bauen
             lastCell.GetPassageNorth() &&
             level.GetCellAt(x_Position, y_Position + 1).GetPassageSouth() &&
-            level.GetCellAt(x_Position, y_Position + 1).GetIsEmpty() &&
+            level.GetCellAt(x_Position, y_Position + 1).GetMazeCellState() == MazeCellState.Empty &&
             level.GetCellAt(x_Position, y_Position + 1) != previousCell
         ){
             
@@ -136,7 +136,7 @@ public class LevelGenerator : MonoBehaviour
         if(                                                                    // Nach Osten bauen
             lastCell.GetPassageEast() &&
             level.GetCellAt(x_Position + 1, y_Position).GetPassageWest() &&
-            level.GetCellAt(x_Position + 1, y_Position).GetIsEmpty() &&
+            level.GetCellAt(x_Position + 1, y_Position).GetMazeCellState() == MazeCellState.Empty &&
             level.GetCellAt(x_Position + 1, y_Position) != previousCell
         ){
             if(corridorMinLength > 0){
@@ -167,7 +167,7 @@ public class LevelGenerator : MonoBehaviour
         if(                                                                     // Nach Süden bauen
             lastCell.GetPassageSouth() &&
             level.GetCellAt(x_Position, y_Position - 1).GetPassageNorth() &&
-            level.GetCellAt(x_Position, y_Position - 1).GetIsEmpty() &&
+            level.GetCellAt(x_Position, y_Position - 1).GetMazeCellState() == MazeCellState.Empty &&
             level.GetCellAt(x_Position, y_Position - 1) != previousCell
         ){
             
@@ -200,7 +200,7 @@ public class LevelGenerator : MonoBehaviour
         if(                                                                    // Nach West bauen
             lastCell.GetPassageWest() &&
             level.GetCellAt(x_Position - 1, y_Position).GetPassageEast() &&
-            level.GetCellAt(x_Position - 1, y_Position).GetIsEmpty() &&
+            level.GetCellAt(x_Position - 1, y_Position).GetMazeCellState() == MazeCellState.Empty &&
             level.GetCellAt(x_Position - 1, y_Position) != previousCell
         ){
             if(corridorMinLength > 0){
@@ -469,22 +469,30 @@ public class LevelGenerator : MonoBehaviour
     private bool SetRandomPathObjectToCell (int x, int y, bool insertToRedosIfNeeded = true){
 
         Maze_Cell cellToFill = level.GetCellAt(x, y);
-        
-        bool northFree = cellToFill.GetPassageNorth() && level.GetCellAt(x,y+1).GetPassageSouth();
-        bool eastFree = cellToFill.GetPassageEast() && level.GetCellAt(x+1,y).GetPassageWest();
-        bool southFree = cellToFill.GetPassageSouth() && level.GetCellAt(x,y-1).GetPassageNorth();
-        bool westFree = cellToFill.GetPassageWest() && level.GetCellAt(x-1,y).GetPassageEast();
 
         float maxRange = 0;
         //Debug.Log("Orientations (" + x + "," + y +"):"  + cellToFill.GetPassageNorth() + "," + cellToFill.GetPassageEast() + "," + cellToFill.GetPassageSouth() + "," + cellToFill.GetPassageWest() + ",");
 
         // MazeCellObjects that could fit in. But they need not to fit. 
         // For Example when you need a T_Crossin, a Corridor is also possible but will not fit in.
-        List<(MazeCellGameObject, float)> mco = new List<(MazeCellGameObject, float)>();
+        List<(MazeCellGameObject, float)> mco = new List<(MazeCellGameObject, float)>();   
 
 
+        bool northFree = cellToFill.GetPassageNorth() && (level.GetCellAt(x,y+1) != null) ? level.GetCellAt(x,y+1).GetPassageSouth() : false;
+        bool eastFree = cellToFill.GetPassageEast() && (level.GetCellAt(x+1,y) != null) ? level.GetCellAt(x+1,y).GetPassageWest() : false;
+        bool southFree = cellToFill.GetPassageSouth() && (level.GetCellAt(x,y-1) != null) ? level.GetCellAt(x,y-1).GetPassageNorth() : false;
+        bool westFree = cellToFill.GetPassageWest() && (level.GetCellAt(x-1,y) != null) ? level.GetCellAt(x-1,y).GetPassageEast() : false;
 
+        if(!insertToRedosIfNeeded){
+            // We only get here when we already fixing the redos. So we need to find a perfect fitting solution without open ends (there is no longer a recursion)
+            // and without colliding with other passages. As we NEED paths to connect there HAS to be passages ONLY in these directions. Else we could
+            // get open ends because of the random choice.
 
+            northFree = northFree   && (level.GetCellAt(x,y+1) != null) ? level.GetCellAt(x,y+1).GetMazeCellState() == MazeCellState.Path : false;  
+            eastFree = eastFree     && (level.GetCellAt(x+1,y) != null) ? level.GetCellAt(x+1,y).GetMazeCellState() == MazeCellState.Path : false; 
+            southFree = southFree   && (level.GetCellAt(x,y-1) != null) ? level.GetCellAt(x,y-1).GetMazeCellState() == MazeCellState.Path : false; 
+            westFree = westFree     && (level.GetCellAt(x-1,y) != null) ? level.GetCellAt(x-1,y).GetMazeCellState() == MazeCellState.Path : false; 
+        }
 
         switch (northFree, eastFree, southFree, westFree)
         {

@@ -19,8 +19,10 @@ public class Maze_Field
     {
         if(x<0 || x>= mazeSizeX || y<0 || y >= mazeSizeY)
         {
+            //Debug.Log((x,y) + " existiert nicht");
             return false;
         }
+        //Debug.Log((x,y) + " existiert");
         return true;
     }
 
@@ -70,7 +72,7 @@ public class Maze_Field
             return false;
         }
 
-        if (!cells[y, x].SetMazeCellObject(rotation, mzo))
+        if (!cells[y, x].SetMazeCellPathObject(rotation, mzo))
         {
             UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
             return false;
@@ -100,31 +102,30 @@ public class Maze_Field
      */
     private bool CheckObjectFacing(int x, int y, MazeCellGameObject obj)
     {
-        //Debug.Log((x, y));
         if (obj == null) return true;
         //Debug.Log(obj + " " +obj.GetFaceWest());
         // 
         //Debug.Log("Orientations (" + 9 + "," + 8 + "):" + GetCellAt(9,8).GetPassageNorth() + "," + GetCellAt(9, 8).GetPassageEast() + "," + GetCellAt(9, 8).GetPassageSouth() + "," + GetCellAt(9, 8).GetPassageWest() + ",");
         
-        if (CellExists(x,y-1) && GetCellAt(x,y-1).GetPassageNorth() && !GetCellAt(x,y-1).GetIsEmpty())
+        if (CellExists(x,y-1) && GetCellAt(x,y-1).GetPassageNorth() && !(GetCellAt(x,y-1).GetMazeCellState() == MazeCellState.Empty))
         {
             // Passage zur unteren Zelle verbaut?
             if (!obj.GetFaceSouth()) return false;
         }
-        if (CellExists(x-1, y) && GetCellAt(x - 1, y).GetPassageEast() && !GetCellAt(x - 1, y).GetIsEmpty())
+        if (CellExists(x-1, y) && GetCellAt(x - 1, y).GetPassageEast() && !(GetCellAt(x - 1, y).GetMazeCellState() == MazeCellState.Empty))
         {
             // Passage zur linken Zelle verbaut?
             if (!obj.GetFaceWest()) return false;
         }
-        if (CellExists(x, y+1) && GetCellAt(x, y + 1).GetPassageSouth() && !GetCellAt(x, y + 1).GetIsEmpty())
+        if (CellExists(x, y+1) && GetCellAt(x, y + 1).GetPassageSouth() && !(GetCellAt(x, y + 1).GetMazeCellState() == MazeCellState.Empty))
         {
             // Passage zur oberen Zelle verbaut?
             if (!obj.GetFaceNorth()) return false;
         }
-        if (CellExists(x+1, y) && GetCellAt(x + 1, y).GetPassageWest() && !GetCellAt(x + 1, y).GetIsEmpty())
+        if (CellExists(x+1, y))
         {
             // Passage zur rechten Zelle verbaut?
-            if (!obj.GetFaceEast()) return false;
+            if (GetCellAt(x + 1, y).GetPassageWest() && !(GetCellAt(x + 1, y).GetMazeCellState() == MazeCellState.Empty) && !obj.GetFaceEast()) return false;
         }
 
         if (obj.GetFaceNorth())     // Wenn das Objekt eine Passage nach Norden hat
@@ -161,7 +162,8 @@ public class Maze_Field
 
     public Maze_Cell GetCellAt(int x, int y)
     {
-        if(x < 0 || x > mazeSizeX || y<0 || y> mazeSizeY){
+        //Debug.Log((x,y));
+        if(x < 0 || x >= mazeSizeX || y<0 || y>= mazeSizeY){
             return null;
         }
         return cells[y, x];

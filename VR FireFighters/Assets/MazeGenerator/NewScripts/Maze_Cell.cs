@@ -2,13 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum MazeCellState{
+    Empty,
+    Path,
+    Room
+}
+
 public class Maze_Cell
 {
     /*
      * True when the cell is empty.
      * False else.
      */
-    private bool isEmpty;
+    private MazeCellState mazeCellState;
 
     /*
      * True when the passage is free, false if blocked.
@@ -25,7 +32,7 @@ public class Maze_Cell
 
     public Maze_Cell(bool passageNorth, bool passageEast, bool passageSouth, bool passageWest)
     {
-        isEmpty = true;
+        mazeCellState = MazeCellState.Empty;
 
         this.passageNorthOriginal = this.passageNorth = passageNorth;
         this.passageEastOriginal = this.passageEast = passageEast;
@@ -42,7 +49,7 @@ public class Maze_Cell
     public bool CheckForMazeCellObject(int rotation, MazeCellGameObject obj)
     {
         if (obj == null) return false;
-        if (!isEmpty) return false;
+        if (mazeCellState != MazeCellState.Empty) return false;
         if (!CheckObjectFacing(obj)) return false;
 
 
@@ -55,7 +62,7 @@ public class Maze_Cell
      * Return True, wenn erfolgreich
      * Return False, falls nicht m�glich, es gibt schon ein Objekt oder �bergebenes Objekt leer ist.
      */
-    public bool SetMazeCellObject(int rotation, MazeCellGameObject obj)
+    public bool SetMazeCellPathObject(int rotation, MazeCellGameObject obj)
     {
         if (!this.CheckForMazeCellObject(rotation, obj)) return false;
         
@@ -65,7 +72,7 @@ public class Maze_Cell
         passageSouth = obj.GetFaceSouth();
         passageWest = obj.GetFaceWest();
         mazeCellGameObject = obj;
-        isEmpty = false;
+        mazeCellState = MazeCellState.Path;
 
         return true;
     }
@@ -85,7 +92,7 @@ public class Maze_Cell
         passageSouth = passageSouthOriginal;
         passageWest = passageWestOriginal;
 
-        isEmpty = true;
+        mazeCellState = MazeCellState.Empty;
         UnityEngine.MonoBehaviour.Destroy(mazeCellGameObject.gameObject);
         mazeCellGameObject = null;
 
@@ -177,8 +184,8 @@ public class Maze_Cell
         return passageWest;
     }
 
-    public bool GetIsEmpty()
+    public MazeCellState GetMazeCellState()
     {
-        return isEmpty;
+        return mazeCellState;
     }
 }
