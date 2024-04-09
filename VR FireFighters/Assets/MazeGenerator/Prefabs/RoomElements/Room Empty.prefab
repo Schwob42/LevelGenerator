@@ -46,9 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8972365b4f85a74aaceaeb242d9b6ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faceNorth: 1
-  faceEast: 1
-  faceSouth: 1
+  faceNorth: 0
+  faceEast: 0
+  faceSouth: 0
   faceWest: 1
   hasDoor: 0
   doorToNorth: 0
