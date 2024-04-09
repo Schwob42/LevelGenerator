@@ -24,7 +24,7 @@ public class MazeSettings : ScriptableObject
 
     [Header("Einstellungen f�r R�ume")]
     [SerializeField] bool thereShouldBeRooms;
-    [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int minRoomWidth, maxRoomWidth, minRoomLength, maxRoomLength;
+    [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int minRoomSize, maxRoomSize;
 
 
     /**
@@ -41,7 +41,7 @@ public class MazeSettings : ScriptableObject
             Debug.LogError("Summe muss 1 ergeben, but is " + sum);
         }
 
-        if(minRoomLength > maxRoomLength || minRoomWidth > maxRoomWidth)
+        if(minRoomSize > maxRoomSize)
         {
             Debug.LogError("Es ergibt wohl nur wenig Sinn, wenn Minimum gr��er Maximum sein soll ;)");
         }
@@ -65,8 +65,8 @@ public class MazeSettings : ScriptableObject
         return minLengthForCorridor;
     }
 
-    public (int minRoomWidth, int maxRoomWidth, int minRoomLength, int maxRoomLength) GetRoomSettings(){
-        return (minRoomWidth, maxRoomWidth, minRoomLength, maxRoomLength);
+    public (int minRoomSize, int maxRoomSize) GetRoomSettings(){
+        return (minRoomSize, maxRoomSize);
     }
 
     /**

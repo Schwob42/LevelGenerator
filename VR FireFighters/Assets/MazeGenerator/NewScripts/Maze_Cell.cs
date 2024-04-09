@@ -106,7 +106,7 @@ public class Maze_Cell
         passageWest = passageWestOriginal;
 
         mazeCellState = MazeCellState.Empty;
-        UnityEngine.MonoBehaviour.Destroy(mazeCellGameObject.gameObject);
+        UnityEngine.MonoBehaviour.Destroy(mazeCellGameObject.gameObject, 0f);
         mazeCellGameObject = null;
 
         return true;

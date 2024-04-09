@@ -32,6 +32,8 @@ public class MazeCellGameObject : MonoBehaviour
     [SerializeField]
     private MazeCellGameObjectType type;
 
+    private int rotation = 0;
+
     /*
      * Rotation im Uhrzeigersinn
      * Norden wird Osten
@@ -50,6 +52,8 @@ public class MazeCellGameObject : MonoBehaviour
         bool doorEast = doorToEast;
         bool doorSouth = doorToSouth;
         bool doorWest = doorToWest;
+
+        rotation += degrees;
 
         switch (degrees)
         {
@@ -165,5 +169,9 @@ public class MazeCellGameObject : MonoBehaviour
     public bool GetDoorWest()
     {
         return doorToWest;
+    }
+
+    public int GetRotation(){
+        return rotation;
     }
 }

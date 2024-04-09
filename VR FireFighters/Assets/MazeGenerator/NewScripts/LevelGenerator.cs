@@ -13,7 +13,7 @@ public class LevelGenerator : MonoBehaviour
     MazeCellGameObjects pathGameObjects;
 
     [SerializeField] 
-    MazeCellGameObjects roomGameObjects;
+    MazeCellGameObjects roomGameObjects;    //TODO Set them
 
     // List of coordinates of cells that can't get filled.
     private List<(int x, int y)> redos = new List<(int x,  int y)>();
@@ -74,27 +74,45 @@ public class LevelGenerator : MonoBehaviour
             }
         }
     }
-    
 
-    private void StartRoomGeneration (int x, int y){
+
+    private bool StartRoomGeneration (int x, int y){
         
-        List<(int x, int y, int rotation, MazeCellGameObject mcgo, bool edge)> possibleRoom = new List<(int x, int y, int rotation, MazeCellGameObject mcgo, bool edge)>();
+        List<(int x, int y)> possibleRoom = new List<(int x, int y)>();
 
-        if (level.GetCellAt(x,y).GetMazeCellGameObject().GetDoorNorth()){
-
+        if (level.GetCellAt(x, y).GetMazeCellGameObject().GetDoorNorth()){
+            TryToBuildRoom(x, y+1, possibleRoom, Orientation.North, true);
+            //TryToBuildRoom(x, y+1, Orientation.North, possibleRoom);
         }
-        if (level.GetCellAt(x,y).GetMazeCellGameObject().GetDoorEast()){
-            TryToBuildRoom(x+1, y, Orientation.East, possibleRoom);
-            BuildRoom(possibleRoom);
+        if (level.GetCellAt(x, y).GetMazeCellGameObject().GetDoorEast()){
+            TryToBuildRoom(x+1, y, possibleRoom, Orientation.East, true);
+            //TryToBuildRoom(x+1, y, Orientation.East, possibleRoom);
         }
-        if (level.GetCellAt(x,y).GetMazeCellGameObject().GetDoorSouth()){
-            
+        if (level.GetCellAt(x, y).GetMazeCellGameObject().GetDoorSouth()){
+            TryToBuildRoom(x, y-1, possibleRoom, Orientation.South, true);
+            //TryToBuildRoom(x, y-1, Orientation.South, possibleRoom);
         }
         if (level.GetCellAt(x,y).GetMazeCellGameObject().GetDoorWest()){
-            
+            TryToBuildRoom(x-1, y, possibleRoom, Orientation.West, true);
+            //TryToBuildRoom(x-1, y, Orientation.West, possibleRoom);
         }
 
-        //Debug.Log("I need a room");
+
+        // remove room
+        Debug.Log(possibleRoom.Count + " " + generationSettings.GetRoomSettings().minRoomSize);
+        if(possibleRoom.Count < generationSettings.GetRoomSettings().minRoomSize){
+            Debug.Log("Replace started");
+            
+            foreach((int x, int y) cell in possibleRoom){
+                level.GetCellAt(cell.x, cell.y).RemoveCellObject();
+            }
+
+            level.ReplaceCellObject(x, y, pathGameObjects);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -102,41 +120,89 @@ public class LevelGenerator : MonoBehaviour
     orientation ist die Richtung, in die der Raum erweitert werden soll
     stepsOn(X/Y)Axis sind die Anzahl an Schritten, die in die jeweilige Richtung bereits gemacht wurden. Diese darf nie größer als die maxWidth/Height) aus den Settings ein
     */
-    private void TryToBuildRoom(int x, int y, Orientation orientation, List<(int x, int y, int rotation, MazeCellGameObject mcgo, bool edge)> possibleRoom, int stepsOnXAxis=0, int stepsOnYAxis=0) {
+    private void TryToBuildRoom(int x, int y, List<(int x, int y)> possibleRoom, Orientation orientation, bool isStart=false) {
+        Debug.Log(possibleRoom.Count);
         
+        // Endbedingung für rekursives Bauen des Raums
+        if(possibleRoom.Count == generationSettings.GetRoomSettings().maxRoomSize){
+            return;
+        }
+        
+        if(isStart){
+            // Build Room with Door 
 
-        switch (orientation) {
-            case Orientation.North:
-                break;
-
-            case Orientation.East:
-                if(x < levelSizeX){
-                    // We can go to the east
-                    if(stepsOnXAxis+1 < generationSettings.GetRoomSettings().maxRoomLength){
-                        possibleRoom.Add((x, y, 0, pathGameObjects.RoomEmpty, false));
-                        TryToBuildRoom(x+1, y, Orientation.East, possibleRoom, stepsOnXAxis+1, stepsOnYAxis);
+            switch (orientation){
+                case Orientation.North:
+                    if(!level.SetRoomObjectIntoCell(x, y, -90, pathGameObjects.RoomWithDoor)){
+                        return;
                     }
-                    else {
-                        possibleRoom.Add((x, y, 180, pathGameObjects.RoomWithWall, true));
+                    possibleRoom.Add((x, y));
+                    break;
+                
+                case Orientation.East:
+                    if(!level.SetRoomObjectIntoCell(x, y, 0, pathGameObjects.RoomWithDoor)){
+                        return;
                     }
-                }
+                    possibleRoom.Add((x, y));
+                    break;
+                
+                case Orientation.South:
+                    if(!level.SetRoomObjectIntoCell(x, y, 90, pathGameObjects.RoomWithDoor)){
+                        return;
+                    }
+                    possibleRoom.Add((x, y));
+                    break;
 
-                break;
+                case Orientation.West:
+                    if(!level.SetRoomObjectIntoCell(x, y, 180, pathGameObjects.RoomWithDoor)){
+                        return;
+                    }
+                    possibleRoom.Add((x, y));
+                    break;
+            }
+        }
+        else {
+            switch (orientation){
+                case Orientation.North:
+                    level.SetRoomObjectIntoCell(x, y, -90, pathGameObjects.RoomEmpty);
+                    possibleRoom.Add((x, y));
+                    break;
+                
+                case Orientation.East:
+                    level.SetRoomObjectIntoCell(x, y, 0, pathGameObjects.RoomEmpty);
+                    possibleRoom.Add((x, y));
+                    break;
+                
+                case Orientation.South:
+                    level.SetRoomObjectIntoCell(x, y, 90, pathGameObjects.RoomEmpty);
+                    possibleRoom.Add((x, y));
+                    break;
 
-            case Orientation.South:
-                break;
-
-            case Orientation.West:
-                break;
+                case Orientation.West:
+                    level.SetRoomObjectIntoCell(x, y, 180, pathGameObjects.RoomEmpty);
+                    possibleRoom.Add((x, y));
+                    break;
+            } 
         }
 
-        
-    }
 
+        // Rekursive Aufrufe
 
-    private void BuildRoom(List<(int x, int y, int rotation, MazeCellGameObject mcgo, bool edge)> room){
-        foreach((int x, int y, int rotation, MazeCellGameObject mcgo, bool edge) in room){
-            level.SetRoomObjectIntoCell(x,y,rotation,mcgo);
+        //Bauen nach Norden 
+        if(level.CellExists(x, y+1) && level.GetCellAt(x, y+1).GetMazeCellState() == MazeCellState.Empty){
+            TryToBuildRoom(x, y+1, possibleRoom, Orientation.North);
+        }
+        // Bauen nach Osten
+        if(level.CellExists(x+1, y) && level.GetCellAt(x+1, y).GetMazeCellState() == MazeCellState.Empty){
+            TryToBuildRoom(x+1, y, possibleRoom, Orientation.East);
+        }
+        // Bauen nach Süden
+        if(level.CellExists(x, y-1) && level.GetCellAt(x, y-1).GetMazeCellState() == MazeCellState.Empty){
+            TryToBuildRoom(x, y-1, possibleRoom, Orientation.South);
+        }
+        // Bauen nach Westen
+        if(level.CellExists(x-1, y) && level.GetCellAt(x-1, y).GetMazeCellState() == MazeCellState.Empty){
+            TryToBuildRoom(x-1, y, possibleRoom, Orientation.West);
         }
     }
 
@@ -167,7 +233,8 @@ public class LevelGenerator : MonoBehaviour
             lastCell.GetPassageNorth() &&
             level.GetCellAt(x_Position, y_Position + 1).GetPassageSouth() &&
             level.GetCellAt(x_Position, y_Position + 1).GetMazeCellState() == MazeCellState.Empty &&
-            level.GetCellAt(x_Position, y_Position + 1) != previousCell
+            level.GetCellAt(x_Position, y_Position + 1) != previousCell &&
+            level.GetCellAt(x_Position, y_Position + 1).GetMazeCellState() != MazeCellState.Room 
         ){
             if(corridorMinLength > 0){
                 // Only corridors and end are allowed
@@ -197,7 +264,8 @@ public class LevelGenerator : MonoBehaviour
             lastCell.GetPassageEast() &&
             level.GetCellAt(x_Position + 1, y_Position).GetPassageWest() &&
             level.GetCellAt(x_Position + 1, y_Position).GetMazeCellState() == MazeCellState.Empty &&
-            level.GetCellAt(x_Position + 1, y_Position) != previousCell
+            level.GetCellAt(x_Position + 1, y_Position) != previousCell &&
+            level.GetCellAt(x_Position + 1, y_Position).GetMazeCellState() != MazeCellState.Room
         ){
             if(corridorMinLength > 0){
                 // Only corridors and end are allowed
@@ -228,7 +296,8 @@ public class LevelGenerator : MonoBehaviour
             lastCell.GetPassageSouth() &&
             level.GetCellAt(x_Position, y_Position - 1).GetPassageNorth() &&
             level.GetCellAt(x_Position, y_Position - 1).GetMazeCellState() == MazeCellState.Empty &&
-            level.GetCellAt(x_Position, y_Position - 1) != previousCell
+            level.GetCellAt(x_Position, y_Position - 1) != previousCell &&
+            level.GetCellAt(x_Position, y_Position - 1).GetMazeCellState() != MazeCellState.Room
         ){
             
 
@@ -261,7 +330,8 @@ public class LevelGenerator : MonoBehaviour
             lastCell.GetPassageWest() &&
             level.GetCellAt(x_Position - 1, y_Position).GetPassageEast() &&
             level.GetCellAt(x_Position - 1, y_Position).GetMazeCellState() == MazeCellState.Empty &&
-            level.GetCellAt(x_Position - 1, y_Position) != previousCell
+            level.GetCellAt(x_Position - 1, y_Position) != previousCell &&
+            level.GetCellAt(x_Position - 1, y_Position).GetMazeCellState() != MazeCellState.Room
         ){
             if(corridorMinLength > 0){
                 // Only corridors and end are allowed
@@ -296,8 +366,6 @@ public class LevelGenerator : MonoBehaviour
     *  
     * Returns True if the Corridor could set and recursion is possible.
     * Returns False if the Corridor could not set. So an End or nothing was set and the recursion ends here.
-
-
 
 
     TODO: Überprüfe die Angrenzenten Zellen vom nächsten Feld, ob ein Corridor/Ende überhaupt möglich ist. Es kann durchaus sein, dass trotz der minimalen Länge 
@@ -421,7 +489,6 @@ public class LevelGenerator : MonoBehaviour
     /**
     Tries to remove the MazeCellGameObject in the given cell position und replace it with 
     a fitting GameObject with more open passages. As Example: T_Crossing get replaces with X_Crossing
-
     */
     private bool RemoveAndReplace (int x, int y, Orientation orientation){
         Maze_Cell mc = level.GetCellAt(x,y);
@@ -526,7 +593,8 @@ public class LevelGenerator : MonoBehaviour
     /**
     Sets a random (depending on the settings in LevelSettings) PathGameObject to the given cell 
 
-    @params insertToRedosIfNeeded is needed to prevent to insert the same coordinate twice (by FixRedo()). **Only FixRedo() calls this method with insertToRedosIfNeeded=false!!!**
+    @params insertToRedosIfNeeded is needed to prevent to insert the same coordinate twice (by FixRedo()). 
+    **Only FixRedo() calls this method with insertToRedosIfNeeded=false!!!**
 
     Returns false if an end was set.
     Returns true else

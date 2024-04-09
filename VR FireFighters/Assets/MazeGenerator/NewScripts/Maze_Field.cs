@@ -26,6 +26,8 @@ public class Maze_Field
         return true;
     }
 
+
+
     public void SetCellDefault(int x, int y)
     {
 
@@ -68,13 +70,13 @@ public class Maze_Field
 
         if (!CheckObjectFacing(x, y, mzo))
         {
-            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
+            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject, 0f);
             return false;
         }
 
         if (!cells[y, x].SetMazeCellPathObject(rotation, mzo))
         {
-            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
+            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject, 0f);
             return false;
         }
 
@@ -85,20 +87,44 @@ public class Maze_Field
         return true;
     }
 
+    public bool ReplaceCellObject(int x, int y, MazeCellGameObjects pathGameObjects){
+        Maze_Cell cell = GetCellAt(x,y);
+        if(cell.GetMazeCellGameObject() == null) return false;
+        
+        MazeCellGameObjectType type = cell.GetMazeCellGameObject().GetMazeCellGameObjectType();
+        int rotation = cell.GetMazeCellGameObject().GetRotation();
+
+        
+        cell.RemoveCellObject();
+        switch (type){
+            case MazeCellGameObjectType.Corridor:
+                return SetRoomObjectIntoCell(x, y, rotation, pathGameObjects.Corridor);
+            case MazeCellGameObjectType.Corner:
+                return SetRoomObjectIntoCell(x, y, rotation, pathGameObjects.Corner);
+            case MazeCellGameObjectType.T_Crossing:
+                return SetRoomObjectIntoCell(x, y, rotation, pathGameObjects.T_Crossing);
+            case MazeCellGameObjectType.End:
+                return SetRoomObjectIntoCell(x, y, rotation, pathGameObjects.End);
+        }       
+
+        return false;
+    }
+
+
     public bool SetRoomObjectIntoCell(int x, int y, int rotation, MazeCellGameObject roomObject){
-        Debug.Log("I've got an " + roomObject + " for " + (x, y, rotation));
+        //Debug.Log("I've got an " + roomObject + " for " + (x, y, rotation));
         MazeCellGameObject mzo = CreateCopyOfGameObject(roomObject);
         mzo.RotateObject(rotation);
 
         if (!CheckRoomFacing(x, y, mzo))
         {
-            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
+            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject, 0f);
             return false;
         }
 
         if (!cells[y, x].SetMazeCellRoomObject(rotation, mzo))
         {
-            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject);
+            UnityEngine.MonoBehaviour.Destroy(mzo.gameObject, 0f);
             return false;
         }
 
