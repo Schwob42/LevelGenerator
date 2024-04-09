@@ -23,7 +23,5 @@ MonoBehaviour:
   probabilityTCrossing: 0.2
   probabilityXCrossing: 0.2
   thereShouldBeRooms: 1
-  minRoomWidth: 0
-  maxRoomWidth: 2
-  minRoomLength: 0
-  maxRoomLength: 2
+  minRoomSize: 1
+  maxRoomSize: 3
