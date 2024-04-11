@@ -17,6 +17,8 @@ public class LevelGenerator : MonoBehaviour
 
     // List of coordinates of cells that can't get filled.
     private List<(int x, int y)> redos = new List<(int x,  int y)>();
+
+    //private List</*rooms*/> rooms = new List<T>();
     
     
     private Maze_Field level;
@@ -75,9 +77,163 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
+    private bool StartRoomGeneration (int x, int y, Orientation direction)
+    {
+        (int x, int y)[,] possibleRoom;
 
-    private bool StartRoomGeneration (int x, int y){
+        if (direction == Orientation.North || direction == Orientation.South)
+        {
+            // X und Y sind *nicht* vertauscht
+            possibleRoom = new (int x, int y)[generationSettings.GetRoomSize().roomHeight, generationSettings.GetRoomSize().roomWidth]; // Reihen = Höhe, Spalten = Breite, laut the Rich Boy
+            GenerateRoom(x, y, possibleRoom, direction);
+        }
+        else
+        {
+            // X und Y sind vertauscht
+            possibleRoom = new (int x, int y)[generationSettings.GetRoomSize().roomWidth, generationSettings.GetRoomSize().roomHeight]; // Reihen = Breite, Spalten = Höhe, laut the Rich Boy
+            GenerateRoom(x, y, possibleRoom, direction);
+        }
+
+        return CheckRoomForRequirements();
+    }
+
+    private bool CheckRoomForRequirements()
+    {
+        return true;
+    }
+
+
+    /// <summary>
+    /// Startmethode für die Raumgenerrierung. Ruft im weiteren Verlauf die rekursive Methode zur Raumgenerierung (<see cref="GenerateRoomRecursive"/>) auf
+    /// </summary>
+    /// <param name="startPosition_x">Position des Raumstarts in x Koordinate</param>
+    /// <param name="startPosition_y">Position des Raumstarts in y Koordinate</param>
+    /// <param name="possibleRoom">Array des möglichen Raums</param>
+    /// <param name="direction">Richtung, von der Tür des Ganges aus, in die gebaut werden soll</param>
+    private void GenerateRoom(int startPosition_x, int startPosition_y, (int row, int column)[,] possibleRoom, Orientation direction)   // Orientierung bedeutet, in Welche Richtung von der Tür aus gebaut wird
+    {
+        int mappedStart_x = -1;
+        int mappedStart_y = -1;
+
+        //only needed in case the start could not be set
+        int original_startPosition_x = startPosition_x;
+        int original_startPosition_y = startPosition_y;
+
+        /*
+         * (0,0) (0,1) .... (0,n)       n = GetLength(1)
+         * (1,0) (1,1) .... (1,n)       m = GetLength(0)
+         * ..... ..... .... (.,n)
+         * (m,0) (m,1) .... (m,n)
+         */
+        switch (direction)
+        {
+            case Orientation.North:
+                mappedStart_x = (int)Mathf.Round(possibleRoom.GetLength(1) / 2);    // halbe Breite
+                mappedStart_y = possibleRoom.GetLength(0) - 1;                      // untere Kante
+                startPosition_y += 1;                                               // wäre sonst auf dem Gang
+                break;
+            case Orientation.East:
+                mappedStart_x = 0;                                                  // ganze Breite
+                mappedStart_y = (int)Mathf.Round(possibleRoom.GetLength(0) / 2);    // halbe Höhe
+                startPosition_x += 1;                                               // wäre sonst auf dem Gang
+                break;
+            case Orientation.West:
+                mappedStart_x = possibleRoom.GetLength(1) - 1;                      // linke Kante
+                mappedStart_y = (int)Mathf.Round(possibleRoom.GetLength(0) / 2);    // Halbe Höhe
+                startPosition_x -= 1;                                               // wäre sonst auf dem Gang
+                break;
+            case Orientation.South:
+                mappedStart_x = (int)Mathf.Round(possibleRoom.GetLength(1) / 2);    // Halbe Breite
+                mappedStart_y = 0;                                                  // Untere Kante
+                startPosition_y -= 1;                                               // wäre sonst auf dem Gang
+                break;
+        }
+
+        Debug.Log(mappedStart_x + " " + mappedStart_y);
+        possibleRoom[mappedStart_y, mappedStart_x] = (startPosition_x, startPosition_y);
+
+        if (!level.SetRoomObjectIntoCell(startPosition_x, startPosition_y, 0, pathGameObjects.RoomWithDoor))
+        {
+            level.ReplaceCellObject(original_startPosition_x, original_startPosition_y, pathGameObjects);
+            possibleRoom = null;
+            return;
+        }
+
+        GenerateRoomRecursive(possibleRoom, (mappedStart_x+1, mappedStart_y), (mappedStart_x, mappedStart_y), (startPosition_x, startPosition_y));
+        GenerateRoomRecursive(possibleRoom, (mappedStart_x-1, mappedStart_y), (mappedStart_x, mappedStart_y), (startPosition_x, startPosition_y));
+        GenerateRoomRecursive(possibleRoom, (mappedStart_x, mappedStart_y+1), (mappedStart_x, mappedStart_y), (startPosition_x, startPosition_y));
+        GenerateRoomRecursive(possibleRoom, (mappedStart_x, mappedStart_y-1), (mappedStart_x, mappedStart_y), (startPosition_x, startPosition_y));       
+    }
+
+    /// <summary>
+    /// Rekursive Methode zur Raumgenerierung. 
+    /// Abbruchbedingungen sind:
+    /// <list type="bullet">
+    ///     <item>Koordinate x oder y liegt außerhalb der lokalen Map (Der Rahmen des zu generierenden Raums</item>
+    ///     <item>Koordinate x oder y liegt außerhalb der globalen Map (Das Spielfeld an sich)</item>
+    ///     <item>Die Zelle der angegebenen Koordinaten ist belegt </item>
+    /// </list>
+    /// </summary>
+    /// <param name="possibleRoom"></param>
+    /// <param name="currentLocalCell"></param>
+    /// <param name="startPointLocal"></param>
+    /// <param name="startPointGlobal"></param>
+    private void GenerateRoomRecursive((int row, int column)[,] possibleRoom, (int currentPosition_x, int currentPosition_y) currentLocalCell, (int startPoint_x, int startPoint_y) startPointLocal, (int startPoint_x, int startPoint_y) startPointGlobal)
+    {
         
+        // Nicht innerhalb der lokalen Map
+        if (currentLocalCell.currentPosition_x < 0 || currentLocalCell.currentPosition_x >= possibleRoom.GetLength(1)) return;
+        if (currentLocalCell.currentPosition_y < 0 || currentLocalCell.currentPosition_y >= possibleRoom.GetLength(0)) return;
+
+        // Nicht innherhalb der globalen Map also dem Level
+        if (startPointGlobal.startPoint_x - currentLocalCell.currentPosition_x < 0 || startPointGlobal.startPoint_x + currentLocalCell.currentPosition_x >= level.GetMazeSizeX()) return;
+        if (startPointGlobal.startPoint_y - currentLocalCell.currentPosition_y < 0 || startPointGlobal.startPoint_y + currentLocalCell.currentPosition_y >= level.GetMazeSizeY()) return;
+
+        // Zelle ist belegt
+        Maze_Cell currentCell = level.GetCellAt(startPointGlobal.startPoint_x + currentLocalCell.currentPosition_x - startPointLocal.startPoint_x, startPointGlobal.startPoint_y + currentLocalCell.currentPosition_y - startPointLocal.startPoint_y);
+        //Debug.Log(currentCell.GetMazeCellState());
+        if (currentCell.GetMazeCellState() != MazeCellState.Empty) return;
+
+        //Debug.Log("Room position");
+        //Debug.Log((currentLocalCell.currentPosition_x) + " " + (currentLocalCell.currentPosition_y) + " " + (startPointGlobal.startPoint_x) + " " + (startPointGlobal.startPoint_y));
+
+        int globalCoordinate_x = startPointGlobal.startPoint_x + currentLocalCell.currentPosition_x - startPointLocal.startPoint_x;
+        int globalCoordinate_y = startPointGlobal.startPoint_y + currentLocalCell.currentPosition_y - startPointLocal.startPoint_y;
+
+        //Debug.Log(globalCoordinate_x + " " + globalCoordinate_y);
+
+        possibleRoom[currentLocalCell.currentPosition_y, currentLocalCell.currentPosition_x] = (globalCoordinate_x, globalCoordinate_y);
+        level.SetRoomObjectIntoCell(globalCoordinate_x, globalCoordinate_y, 0, pathGameObjects.RoomEmpty);
+        //Debug.Log(level.GetCellAt(startPointGlobal.startPoint_x + currentLocalCell.currentPosition_x, startPointGlobal.startPoint_y + currentLocalCell.currentPosition_y).GetMazeCellState());
+
+        GenerateRoomRecursive(possibleRoom, (currentLocalCell.currentPosition_x + 1, currentLocalCell.currentPosition_y), startPointLocal, startPointGlobal);
+        GenerateRoomRecursive(possibleRoom, (currentLocalCell.currentPosition_x - 1, currentLocalCell.currentPosition_y), startPointLocal, startPointGlobal);
+        GenerateRoomRecursive(possibleRoom, (currentLocalCell.currentPosition_x, currentLocalCell.currentPosition_y + 1), startPointLocal, startPointGlobal);
+        GenerateRoomRecursive(possibleRoom, (currentLocalCell.currentPosition_x, currentLocalCell.currentPosition_y - 1), startPointLocal, startPointGlobal);
+    }
+
+
+    private void StartRoomGeneration (int x, int y){
+    //private bool StartRoomGeneration (int x, int y){
+        Maze_Cell cell = level.GetCellAt(x, y);
+
+        if (cell.GetMazeCellGameObject().GetDoorNorth())
+        {
+            StartRoomGeneration(x, y, Orientation.North);
+        }
+        if (cell.GetMazeCellGameObject().GetDoorEast())
+        {
+            StartRoomGeneration(x, y, Orientation.East);
+        }
+        if (cell.GetMazeCellGameObject().GetDoorSouth())
+        {
+            StartRoomGeneration (x, y, Orientation.South);
+        }
+        if (cell.GetMazeCellGameObject().GetDoorWest())
+        {
+            StartRoomGeneration (x, y, Orientation.West);
+        }
+        /**
         List<(int x, int y)> possibleRoom = new List<(int x, int y)>();
 
         if (level.GetCellAt(x, y).GetMazeCellGameObject().GetDoorNorth()){
@@ -113,6 +269,7 @@ public class LevelGenerator : MonoBehaviour
         }
 
         return true;
+        */
     }
 
     /**
@@ -410,6 +567,10 @@ public class LevelGenerator : MonoBehaviour
                         redos.Add((x, y));
                         return false;
                     }
+                    if (level.GetCellAt(x, y).GetMazeCellGameObject().objectHasDoor())
+                    {
+                        StartRoomGeneration(x, y);
+                    }
                     return true;
                 }
                 else if (x < levelSizeX-1){
@@ -432,9 +593,13 @@ public class LevelGenerator : MonoBehaviour
 
             case Orientation.South:
                 if(y > 0 && mc.GetPassageNorth() && mc.GetPassageSouth() && level.GetCellAt(x, y - 1).GetPassageNorth()){
-                    if (!level.SetGameObjectIntoCell(x, y, 0, pathGameObjects.Corridor)){
+                    if (!level.SetGameObjectIntoCell(x, y, 180, pathGameObjects.CorridorWithDoor)){
                         redos.Add((x, y));
                         return false;
+                    }
+                    if (level.GetCellAt(x, y).GetMazeCellGameObject().objectHasDoor())
+                    {
+                        StartRoomGeneration(x, y);
                     }
                     return true;
                 }

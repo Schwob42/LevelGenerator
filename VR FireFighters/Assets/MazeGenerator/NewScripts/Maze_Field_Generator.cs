@@ -423,7 +423,6 @@ public class Maze_Field_Generator : MonoBehaviour
                 //mc.SetMazeCellObject(0, mazeGameObjects.X_Crossing);
                 break;
         }*/
-
     }
 
 
