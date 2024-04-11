@@ -49,7 +49,7 @@ MonoBehaviour:
   faceNorth: 0
   faceEast: 0
   faceSouth: 0
-  faceWest: 1
+  faceWest: 0
   hasDoor: 0
   doorToNorth: 0
   doorToEast: 0
