@@ -25,6 +25,8 @@ public class MazeSettings : ScriptableObject
     [Header("Einstellungen f�r R�ume")]
     [SerializeField] bool thereShouldBeRooms;
     [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int minRoomSize, maxRoomSize;
+    [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int roomWidth;
+    [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int roomHeight;
 
 
     /**
@@ -67,6 +69,10 @@ public class MazeSettings : ScriptableObject
 
     public (int minRoomSize, int maxRoomSize) GetRoomSettings(){
         return (minRoomSize, maxRoomSize);
+    }
+    
+    public (int roomWidth, int roomHeight) GetRoomSize(){
+        return (roomWidth, roomHeight);
     }
 
     /**

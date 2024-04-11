@@ -25,3 +25,5 @@ MonoBehaviour:
   thereShouldBeRooms: 1
   minRoomSize: 1
   maxRoomSize: 3
+  roomWidth: 4
+  roomHeight: 5
