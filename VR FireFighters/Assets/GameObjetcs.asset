@@ -22,4 +22,6 @@ MonoBehaviour:
   RoomWithWall: {fileID: -290627520772378307, guid: 51e6374abd4f08344a277c44bf8cd63c, type: 3}
   RoomWithCorner: {fileID: -290627520772378307, guid: 8f3b7bfda29c5b546bafce90dc37037a, type: 3}
   RoomWithDoor: {fileID: -290627520772378307, guid: 4e4849aad1b91464da97171fa5bf6ee5, type: 3}
+  RoomEnd: {fileID: -290627520772378307, guid: ff6ddedc485ae964e923bd1ab7e415c4, type: 3}
+  RoomWallBothSides: {fileID: -290627520772378307, guid: 4b51d1cb21149f6478e95263d4eb9a48, type: 3}
   Start: {fileID: -2332816521979916399, guid: b23ef24c5f85d3a47971e4d180dbfcde, type: 3}
