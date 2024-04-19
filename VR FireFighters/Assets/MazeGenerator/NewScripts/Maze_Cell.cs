@@ -28,9 +28,12 @@ public class Maze_Cell
     /*
      * The object to set into the cell. Could be null.
      */
-    private MazeCellGameObject mazeCellGameObject;
+    private MazeCellGameObject mazeCellGameObject; 
+    
+    public readonly int x;
+    public readonly int y;
 
-    public Maze_Cell(bool passageNorth, bool passageEast, bool passageSouth, bool passageWest)
+    public Maze_Cell(bool passageNorth, bool passageEast, bool passageSouth, bool passageWest, int x, int y)
     {
         mazeCellState = MazeCellState.Empty;
 
@@ -38,7 +41,11 @@ public class Maze_Cell
         this.passageEastOriginal = this.passageEast = passageEast;
         this.passageSouthOriginal = this.passageSouth = passageSouth;
         this.passageWestOriginal = this.passageWest = passageWest;
+        this.x = x;
+        this.y = y;
     }
+
+   
 
 
     /**
@@ -49,12 +56,22 @@ public class Maze_Cell
     public bool CheckForMazeCellObject(int rotation, MazeCellGameObject obj)
     {
         if (obj == null) return false;
-        if (mazeCellState != MazeCellState.Empty) return false;
+        if (mazeCellState != MazeCellState.Empty && mazeCellState != MazeCellState.Room) return false;      //Somit könnte ein Raum mehr als nur eine zugangstür haben
         if (!CheckObjectFacing(obj)) return false;
 
 
         //Debug.Log("Check True");
         return true;
+    }
+
+    public void ReservateForRoom()
+    {
+        mazeCellState = MazeCellState.Room;
+    }
+
+    public void RemoveReservationForRoom()
+    {
+        mazeCellState = MazeCellState.Empty;
     }
 
     /**

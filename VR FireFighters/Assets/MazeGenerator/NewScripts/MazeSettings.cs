@@ -24,9 +24,10 @@ public class MazeSettings : ScriptableObject
 
     [Header("Einstellungen f�r R�ume")]
     [SerializeField] bool thereShouldBeRooms;
+    [SerializeField, Range (0,1)] float roomPossibility;
     [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int minRoomSize, maxRoomSize;
-    [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int roomWidth;
-    [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] int roomHeight;
+    [SerializeField, Tooltip("The size in number of cells per room"), Range(3, 10)] int roomWidth;
+    [SerializeField, Tooltip("The size in number of cells per room"), Range(3, 10)] int roomHeight;
 
 
     /**
@@ -57,7 +58,7 @@ public class MazeSettings : ScriptableObject
         return (startPositionX,startPositionY);
     }
 
-    public (int, int) GetMazeSize()
+    public (int mazeSizeX, int mazeSizeY) GetMazeSize()
     {
         return (mazeSizeX, mazeSizeY);
     }
@@ -69,6 +70,11 @@ public class MazeSettings : ScriptableObject
 
     public (int minRoomSize, int maxRoomSize) GetRoomSettings(){
         return (minRoomSize, maxRoomSize);
+    }
+
+    public float GetRoomPossibility()
+    {
+        return roomPossibility;
     }
     
     public (int roomWidth, int roomHeight) GetRoomSize(){

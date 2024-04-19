@@ -32,19 +32,19 @@ public class Maze_Field
     {
 
         //Ecken
-        if (x == 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, false);                                //linke untere Ecke
-        else if (x == 0 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, true, true, false);                 //linke obere Ecke
-        else if (x == mazeSizeX-1 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, false, true, true);       //rechte obere Ecke
-        else if (x == mazeSizeX-1 && y == 0) cells[y, x] = new Maze_Cell(true, false, false, true);                 //rechte untere Ecke
+        if (x == 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, false, x, y);                                //linke untere Ecke
+        else if (x == 0 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, true, true, false, x, y);                 //linke obere Ecke
+        else if (x == mazeSizeX-1 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, false, true, true, x, y);       //rechte obere Ecke
+        else if (x == mazeSizeX-1 && y == 0) cells[y, x] = new Maze_Cell(true, false, false, true, x, y);                 //rechte untere Ecke
 
         //R�nder
-        else if (x == 0 && y != 0) cells[y, x] = new Maze_Cell(true, true, true, false);                            //linker Rand
-        else if (x != 0 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, true, true, true);                  //oberer Rand
-        else if (x == mazeSizeX-1 && y != mazeSizeY-1) cells[y, x] = new Maze_Cell(true, false, true, true);        //rechter Rand
-        else if (x != 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, true);                            //unterer Rand
+        else if (x == 0 && y != 0) cells[y, x] = new Maze_Cell(true, true, true, false, x, y);                            //linker Rand
+        else if (x != 0 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, true, true, true, x, y);                  //oberer Rand
+        else if (x == mazeSizeX-1 && y != mazeSizeY-1) cells[y, x] = new Maze_Cell(true, false, true, true, x, y);        //rechter Rand
+        else if (x != 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, true, x, y);                            //unterer Rand
 
         //Mitte
-        else cells[y, x] = new Maze_Cell(true, true, true, true);                                                   //irgendwo mittendrin
+        else cells[y, x] = new Maze_Cell(true, true, true, true, x, y);                                                   //irgendwo mittendrin
 
     }
 
@@ -98,37 +98,44 @@ public class Maze_Field
         cell.RemoveCellObject();
         switch (type){
             case MazeCellGameObjectType.Corridor:
-                return SetRoomObjectIntoCell(x, y, rotation, pathGameObjects.Corridor);
+                return SetGameObjectIntoCell(x, y, rotation, pathGameObjects.Corridor);
             case MazeCellGameObjectType.Corner:
-                return SetRoomObjectIntoCell(x, y, rotation, pathGameObjects.Corner);
+                return SetGameObjectIntoCell(x, y, rotation, pathGameObjects.Corner);
             case MazeCellGameObjectType.T_Crossing:
-                return SetRoomObjectIntoCell(x, y, rotation, pathGameObjects.T_Crossing);
+                return SetGameObjectIntoCell(x, y, rotation, pathGameObjects.T_Crossing);
             case MazeCellGameObjectType.End:
-                return SetRoomObjectIntoCell(x, y, rotation, pathGameObjects.End);
+                return SetGameObjectIntoCell(x, y, rotation, pathGameObjects.End);
         }       
 
         return false;
     }
 
 
-    public bool SetRoomObjectIntoCell(int x, int y, int rotation, MazeCellGameObject roomObject){
+    public void ReservateCellForRoom(int x, int y)
+    {
+        cells[y, x].ReservateForRoom();
+    }
+
+    public bool SetRoomObjectIntoCell(Maze_Cell cell, int rotation, MazeCellGameObject roomObject){
         //Debug.Log("I've got an " + roomObject + " for " + (x, y, rotation));
         MazeCellGameObject mzo = CreateCopyOfGameObject(roomObject);
         mzo.RotateObject(rotation);
 
-        if (!CheckRoomFacing(x, y, mzo))
+        if (!CheckRoomFacing(cell.x , cell.y, mzo))
         {
+            Debug.Log("Wrong room facing");
             UnityEngine.MonoBehaviour.Destroy(mzo.gameObject, 0f);
             return false;
         }
 
-        if (!cells[y, x].SetMazeCellRoomObject(rotation, mzo))
+        if (!cell.SetMazeCellRoomObject(rotation, mzo))
         {
+            Debug.Log("Couldn't place room");
             UnityEngine.MonoBehaviour.Destroy(mzo.gameObject, 0f);
             return false;
         }
 
-        mzo.transform.position = new Vector3(x*2, 1, y*2);
+        mzo.transform.position = new Vector3(cell.x*2, 1, cell.y*2);
         mzo.gameObject.SetActive(true);
         //mzo.transform.rotation = Quaternion.Euler(new Vector3(0,rotation,0));
 
