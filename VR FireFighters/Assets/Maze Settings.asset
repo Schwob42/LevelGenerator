@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d015c2b25617ca47b4dc021bfc40860, type: 3}
   m_Name: Maze Settings
   m_EditorClassIdentifier: 
-  mazeSizeX: 50
-  mazeSizeY: 50
+  mazeSizeX: 15
+  mazeSizeY: 15
   startPositionX: 3
   startPositionY: 2
   minLengthForCorridor: 3
@@ -26,5 +26,5 @@ MonoBehaviour:
   roomPossibility: 0.197
   minRoomSize: 1
   maxRoomSize: 2
-  roomWidth: 7
+  roomWidth: 5
   roomHeight: 5

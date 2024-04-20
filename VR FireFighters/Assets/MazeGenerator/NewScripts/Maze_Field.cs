@@ -144,9 +144,11 @@ public class Maze_Field
 
     private bool CheckRoomFacing(int x, int y, MazeCellGameObject obj){
         if (obj == null) return true;
+        // TODO: Write this
 
         
-        
+
+
         //Debug.Log("All good");
         return true;
     }
@@ -188,10 +190,10 @@ public class Maze_Field
             // Passage zur oberen Zelle verbaut?
             if (!obj.GetFaceNorth()) return false;
         }
-        if (CellExists(x+1, y))
+        if (CellExists(x+1, y) && GetCellAt(x + 1, y).GetPassageWest() && !(GetCellAt(x + 1, y).GetMazeCellState() == MazeCellState.Empty))
         {
             // Passage zur rechten Zelle verbaut?
-            if (GetCellAt(x + 1, y).GetPassageWest() && !(GetCellAt(x + 1, y).GetMazeCellState() == MazeCellState.Empty) && !obj.GetFaceEast()) return false;
+            if (!obj.GetFaceEast()) return false;
         }
 
         if (obj.GetFaceNorth())     // Wenn das Objekt eine Passage nach Norden hat
