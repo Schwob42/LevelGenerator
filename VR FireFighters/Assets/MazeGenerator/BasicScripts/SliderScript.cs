@@ -19,7 +19,6 @@ public class SliderScript : MonoBehaviour
     public void ChangeValue()
     {
         float value = slider.value;
-        Debug.Log(value);
         sliderValueTextField.GetComponent<TMP_Text>().text = value.ToString();
     }
 }

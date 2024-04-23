@@ -46,6 +46,8 @@ public class LevelGenerator : MonoBehaviour
 
     public void GenerateField ()
     {
+        Random.InitState(generationSettings.GetSeed());
+
         (int, int) size = generationSettings.GetMazeSize();
         levelSizeX = size.Item1;
         levelSizeY = size.Item2;
@@ -61,8 +63,24 @@ public class LevelGenerator : MonoBehaviour
 
         level = new Maze_Field(levelSizeX, levelSizeY);
         SetEveryCellToDefault();
-        
-        StartPathGeneration();
+
+        if (!generationSettings.GetGenerateRoom())
+        {
+            roomPossibility = 0;
+            // Sonst würden Pfadelemente mit Türen gebaut werden
+        }
+
+        if (generationSettings.GetGeneratePath())
+        {
+            StartPathGeneration();
+        }
+        else
+        {
+            if (generationSettings.GetGenerateRoom())
+            {
+                StartRoomGeneration(generationSettings.GetStartPosition().x, generationSettings.GetStartPosition().y, Orientation.North);
+            }            
+        }
 
         FixRedos();
     }
@@ -83,21 +101,6 @@ public class LevelGenerator : MonoBehaviour
 
     private bool StartRoomGeneration (int x, int y, Orientation direction)
     {
-        /*
-        if (direction == Orientation.North || direction == Orientation.South)
-        {
-            // X und Y sind *nicht* vertauscht
-            possibleRoom = new (int x, int y)[generationSettings.GetRoomSize().roomHeight, generationSettings.GetRoomSize().roomWidth]; // Reihen = Höhe, Spalten = Breite, laut the Rich Boy
-            GenerateRoom(x, y, possibleRoom, direction);
-        }
-        else
-        {
-            // X und Y sind vertauscht
-            possibleRoom = new (int x, int y)[generationSettings.GetRoomSize().roomWidth, generationSettings.GetRoomSize().roomHeight]; // Reihen = Breite, Spalten = Höhe, laut the Rich Boy
-            GenerateRoom(x, y, possibleRoom, direction);
-        }
-        */
-
         List<Maze_Cell> room = null;
 
         // TODO: Nur eine Tür plazieren, wenn dahinter schon ein Raum existiert (Raum mit mehreren Türen)
@@ -117,11 +120,6 @@ public class LevelGenerator : MonoBehaviour
         {
            room = GenerateRoom(x - 1, y, direction);
         }
-
-
-        //InsertRoomPrefabs(possibleRoom);
-
-
 
         if (room != null && room.Count > 0)
         {
@@ -774,7 +772,7 @@ public class LevelGenerator : MonoBehaviour
     */
     private bool SetCorridorFor (int x, int y, Orientation orientation){
         Maze_Cell mc = level.GetCellAt(x, y);
-        float random = Random.Range(0f, 1f);
+        float random = Random.value;
         bool buildDoor = random <= roomPossibility;
 
         switch (orientation){  
@@ -1129,7 +1127,8 @@ public class LevelGenerator : MonoBehaviour
         float objPos;
 
         while(mco.Count > 0){
-            randomValue = Random.Range(0f, maxRange);
+            //randomValue = Random.Range(0f, maxRange);
+            randomValue = Random.value % maxRange;
             sum = 0;
             objToUse = null;
             objPos = 0;
