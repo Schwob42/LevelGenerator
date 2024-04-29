@@ -45,7 +45,7 @@ public class Maze_Field_Generator : MonoBehaviour
         probabilityTCrossing = probs.Item4;
         probabilityXCrossing = probs.Item5;
 
-        maze = new Maze_Field(mazeSizeY, mazeSizeY);
+        maze = new Maze_Field(mazeSizeY, mazeSizeY, null);
         SetEveryCellToDefault();
         
         GeneratePath();

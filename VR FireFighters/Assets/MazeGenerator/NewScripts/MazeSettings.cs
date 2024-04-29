@@ -6,12 +6,12 @@ using UnityEngine;
 
 public class MazeSettings : ScriptableObject
 {
-    [SerializeField, Range(0, 50)]
+    [SerializeField]
     private int mazeSizeX;
-    [SerializeField, Range(0, 50)]
+    [SerializeField]
     private int mazeSizeY;
 
-    [SerializeField, Range(0, 50)]
+    [SerializeField]
     private int startPositionX, startPositionY;
 
     [SerializeField, Range(0, 10), Tooltip("Minimale L�nge eines Korridors, bis eine Kreuzung oder Kurve kommen darf. Enden sind von dieser Einstellung nicht betroffen")]
@@ -32,7 +32,6 @@ public class MazeSettings : ScriptableObject
     [SerializeField, Range(0f, 1f)] private float probabilityXCrossing;
 
     [Header("Einstellungen f�r R�ume")]
-    [SerializeField] bool thereShouldBeRooms;
     [SerializeField, Range (0,1)] float roomPossibility;
     [SerializeField, Tooltip("The size in number of cells per room"), Range(1, 10)] private int minRoomSize, maxRoomSize;
     [SerializeField, Tooltip("The size in number of cells per room"), Range(3, 10)] private int roomWidth;
@@ -69,11 +68,11 @@ public class MazeSettings : ScriptableObject
 
     public void SetStartPositionX(int x)
     {
-        startPositionX = x;
+        this.startPositionX = x;
     }
     public void SetStartPositionY(int y)
     {
-        startPositionY = y;
+        this.startPositionY = y;
     }
 
     public (int mazeSizeX, int mazeSizeY) GetMazeSize()
@@ -81,6 +80,16 @@ public class MazeSettings : ScriptableObject
         Debug.Log(this.mazeSizeX + " " + this.mazeSizeY);
         return (this.mazeSizeX, this.mazeSizeY);
     }
+    public int GetMazeSizeX()
+    {
+        return this.mazeSizeX;
+    }
+    public int GetMazeSizeY()
+    {
+        return this.mazeSizeY;
+    }
+
+
 
     public void SetMazeSizeX(int mazeSizeX)
     {
@@ -96,18 +105,79 @@ public class MazeSettings : ScriptableObject
     {
         return minLengthForCorridor;
     }
-
-    public (int minRoomSize, int maxRoomSize) GetRoomSettings(){
-        return (minRoomSize, maxRoomSize);
+    
+    public void SetMinCorridorLength(int len)
+    {
+        this.minLengthForCorridor = len;
     }
 
     public float GetRoomPossibility()
     {
         return roomPossibility;
     }
+    public void SetRoomPossibility(float pos)
+    {
+        this.roomPossibility = pos;
+    }
     
-    public (int roomWidth, int roomHeight) GetRoomSize(){
-        return (roomWidth, roomHeight);
+    public float GetCorridorPossibility()
+    {
+        return probabilityCorridor;
+    }
+    public void SetCorridorPossibility(float pos)
+    {
+        this.probabilityCorridor = pos;
+    }
+    
+    public float GetCornerPossibility()
+    {
+        return probabilityCorner;
+    } 
+    public void SetCornerPossibility(float pos)
+    {
+        this.probabilityCorner = pos;
+    }
+    
+    public float GetXCrossingPossibility()
+    {
+        return probabilityXCrossing;
+    }    
+    public void SetXCrossingPossibility(float pos)
+    {
+        this.probabilityXCrossing = pos;
+    }
+    
+    public float GetTCrossingPossibility()
+    {
+        return probabilityTCrossing;
+    }
+    public void SetTCrossingPossibility(float pos)
+    {
+        this.probabilityTCrossing = pos;
+    }
+    
+    public float GetEndPossibility()
+    {
+        return probabilityEnd;
+    }
+    public void SetEndPossibility(float pos)
+    {
+        this.probabilityEnd = pos;
+    }
+
+
+    public int GetRoomSizeWidth(){
+        return roomWidth;
+    }
+    public int GetRoomSizeHeight(){
+        return roomHeight;
+    }
+    
+    public void SetRoomSizeWidth(int width){
+        this.roomWidth = width;
+    }
+    public void SetRoomSizeHeight(int height){
+        this.roomHeight = height;
     }
 
     /**
@@ -152,4 +222,5 @@ public class MazeSettings : ScriptableObject
     {
         this.generatePath = state;
     }
+
 }

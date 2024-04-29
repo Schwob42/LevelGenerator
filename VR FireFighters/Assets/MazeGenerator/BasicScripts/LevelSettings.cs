@@ -25,11 +25,11 @@ public class LevelSettings : MonoBehaviour
 
     public void SetMaxPositionX()
     {
-        StartPos_X.GetComponent<Slider>().maxValue = Level_Width.GetComponent<Slider>().value;
+        StartPos_X.GetComponent<Slider>().maxValue = Level_Width.GetComponent<Slider>().value-1;
     }
 
     public void SetMaxPositionY()
     {
-        StartPos_Y.GetComponent<Slider>().maxValue = Level_Height.GetComponent<Slider>().value;
+        StartPos_Y.GetComponent<Slider>().maxValue = Level_Height.GetComponent<Slider>().value-1;
     }
 }

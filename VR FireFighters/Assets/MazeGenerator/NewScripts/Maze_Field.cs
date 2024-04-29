@@ -8,11 +8,14 @@ public class Maze_Field
 
     private int mazeSizeX, mazeSizeY;
 
-    public Maze_Field(int mazeSizeX, int mazeSizeY)
+    private GameObject level;
+
+    public Maze_Field(int mazeSizeX, int mazeSizeY, GameObject level)
     {
         this.mazeSizeX = mazeSizeX;
         this.mazeSizeY = mazeSizeY;
-        cells = new Maze_Cell[mazeSizeY, mazeSizeY];
+        cells = new Maze_Cell[mazeSizeY, mazeSizeX];
+        this.level = level;
     }
 
     public bool CellExists(int x, int y)
@@ -30,7 +33,6 @@ public class Maze_Field
 
     public void SetCellDefault(int x, int y)
     {
-
         //Ecken
         if (x == 0 && y == 0) cells[y, x] = new Maze_Cell(true, true, false, false, x, y);                                //linke untere Ecke
         else if (x == 0 && y == mazeSizeY-1) cells[y, x] = new Maze_Cell(false, true, true, false, x, y);                 //linke obere Ecke
@@ -82,6 +84,7 @@ public class Maze_Field
 
         mzo.transform.position = new Vector3(x*2, 1, y*2);
         mzo.gameObject.SetActive(true);
+        mzo.transform.SetParent(this.level.transform);
         //mzo.transform.rotation = Quaternion.Euler(new Vector3(0,rotation,0));
 
         return true;
@@ -136,6 +139,7 @@ public class Maze_Field
         }
 
         mzo.transform.position = new Vector3(cell.x*2, 1, cell.y*2);
+        mzo.transform.SetParent(this.level.transform);
         mzo.gameObject.SetActive(true);
         //mzo.transform.rotation = Quaternion.Euler(new Vector3(0,rotation,0));
 

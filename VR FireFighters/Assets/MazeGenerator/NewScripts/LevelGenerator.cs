@@ -12,8 +12,8 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] 
     MazeCellGameObjects pathGameObjects;
 
-    [SerializeField] 
-    MazeCellGameObjects roomGameObjects;    //TODO Set them
+    [SerializeField]
+    GameObject levelGameobject; // wo die Objekte eingefügt werden
 
     // List of coordinates of cells that can't get filled.
     private List<(int x, int y)> redos = new List<(int x,  int y)>();
@@ -39,18 +39,22 @@ public class LevelGenerator : MonoBehaviour
      */
     void Start ()
     {
-        GenerateField();
+        //GenerateField();
     }
 
    
 
     public void GenerateField ()
     {
+        
         Random.InitState(generationSettings.GetSeed());
 
-        (int, int) size = generationSettings.GetMazeSize();
-        levelSizeX = size.Item1;
-        levelSizeY = size.Item2;
+        //(int, int) size = generationSettings.GetMazeSize();
+        levelSizeX = generationSettings.GetMazeSizeX();
+        levelSizeY = generationSettings.GetMazeSizeY();
+
+        // Kamera ausrichten
+        this.gameObject.GetComponent<SetLevelCamera>().SetCameraPosition(levelSizeX, levelSizeY);
 
         (float, float, float, float, float) probs = generationSettings.GetProbabilities();
         probabilityCorridor = probs.Item1;
@@ -61,7 +65,15 @@ public class LevelGenerator : MonoBehaviour
 
         roomPossibility = generationSettings.GetRoomPossibility();
 
-        level = new Maze_Field(levelSizeX, levelSizeY);
+        if(levelGameobject.transform.childCount > 0)
+        {
+            foreach(Transform t in levelGameobject.transform.GetComponentInChildren<Transform>())
+            {
+                UnityEngine.MonoBehaviour.Destroy(t.gameObject, 0f);
+            }
+        }
+
+        level = new Maze_Field(levelSizeX, levelSizeY, levelGameobject);
         SetEveryCellToDefault();
 
         if (!generationSettings.GetGenerateRoom())
@@ -145,43 +157,43 @@ public class LevelGenerator : MonoBehaviour
     {
         if(direction == Orientation.North) { 
             // Out of local space
-            if (currentPositionX < startX - generationSettings.GetRoomSize().roomWidth / 2 ) return;
-            if (currentPositionX > startX + generationSettings.GetRoomSize().roomWidth / 2) return;
+            if (currentPositionX < startX - generationSettings.GetRoomSizeWidth() / 2 ) return;
+            if (currentPositionX > startX + generationSettings.GetRoomSizeWidth() / 2) return;
 
-            if (currentPositionY - startY > generationSettings.GetRoomSize().roomHeight) return; 
+            if (currentPositionY - startY > generationSettings.GetRoomSizeHeight()) return; 
             if (currentPositionY - startY < 0) return;
         }
         else if (direction == Orientation.East)
         {
             // Out of local space
-            if (currentPositionX - startX > generationSettings.GetRoomSize().roomWidth) return;
+            if (currentPositionX - startX > generationSettings.GetRoomSizeWidth()) return;
             if (currentPositionX - startX < 0) return;
 
-            if (currentPositionY < startY - generationSettings.GetRoomSize().roomHeight / 2) return;
-            if (currentPositionY > startY + generationSettings.GetRoomSize().roomHeight / 2) return;
+            if (currentPositionY < startY - generationSettings.GetRoomSizeHeight() / 2) return;
+            if (currentPositionY > startY + generationSettings.GetRoomSizeHeight() / 2) return;
         }
         else if (direction == Orientation.South)
         {
             // Out of local space
-            if (currentPositionX < startX - generationSettings.GetRoomSize().roomWidth / 2) return;
-            if (currentPositionX > startX + generationSettings.GetRoomSize().roomWidth / 2) return;
+            if (currentPositionX < startX - generationSettings.GetRoomSizeWidth() / 2) return;
+            if (currentPositionX > startX + generationSettings.GetRoomSizeWidth() / 2) return;
 
-            if (startY - currentPositionY > generationSettings.GetRoomSize().roomHeight) return;
+            if (startY - currentPositionY > generationSettings.GetRoomSizeHeight()) return;
             if (startY - currentPositionY < 0) return;
         }
         else if (direction == Orientation.West)
         {
             // Out of local space
-            if (startX - currentPositionX > generationSettings.GetRoomSize().roomWidth) return;
+            if (startX - currentPositionX > generationSettings.GetRoomSizeWidth()) return;
             if (startX - currentPositionX < 0) return;
 
-            if (currentPositionY < startY - generationSettings.GetRoomSize().roomHeight / 2) return;
-            if (currentPositionY > startY + generationSettings.GetRoomSize().roomHeight / 2) return;
+            if (currentPositionY < startY - generationSettings.GetRoomSizeHeight() / 2) return;
+            if (currentPositionY > startY + generationSettings.GetRoomSizeHeight() / 2) return;
         }
 
         // Out of global space
-        if (currentPositionX >= generationSettings.GetMazeSize().mazeSizeX) return;
-        if (currentPositionY >= generationSettings.GetMazeSize().mazeSizeY) return;
+        if (currentPositionX >= generationSettings.GetMazeSizeX()) return;
+        if (currentPositionY >= generationSettings.GetMazeSizeY()) return;
         if (currentPositionX < 0) return;
         if (currentPositionY < 0) return;
 
@@ -420,80 +432,7 @@ public class LevelGenerator : MonoBehaviour
         level.ReplaceCellObject(startX, startY, pathGameObjects);
     }
 
-    /*
-    private void InsertRoomPrefabs((int row, int column)[,] possibleRoom)
-    {
-
-        for (int y = 0; y < possibleRoom.GetLength(0); y++)
-        {
-            for (int x = 0; x < possibleRoom.GetLength(1); x++)
-            {
-                Debug.Log((y, x));
-                bool roomNorth = level.GetCellAt(possibleRoom[y, x].row, possibleRoom[y, x].column).GetPassageNorth()
-                    && level.GetCellAt(possibleRoom[y, x].row, possibleRoom[y, x].column + 1).GetMazeCellState() == MazeCellState.Room;
-
-                bool roomEast = level.GetCellAt(possibleRoom[y, x].row, possibleRoom[y, x].column).GetPassageEast()
-                    && level.GetCellAt(possibleRoom[y, x].row + 1, possibleRoom[y, x].column).GetMazeCellState() == MazeCellState.Room;
-
-                bool roomSouth = level.GetCellAt(possibleRoom[y, x].row, possibleRoom[y, x].column).GetPassageSouth()
-                    && level.GetCellAt(possibleRoom[y, x].row, possibleRoom[y, x].column - 1).GetMazeCellState() == MazeCellState.Room;
-
-                bool roomWest = level.GetCellAt(possibleRoom[y, x].row, possibleRoom[y, x].column).GetPassageWest()
-                    && level.GetCellAt(possibleRoom[y, x].row - 1, possibleRoom[y, x].column).GetMazeCellState() == MazeCellState.Room;
-
-                Debug.Log(roomNorth + " " + roomEast + " " + roomSouth + " " + roomWest);
-
-                if (!roomNorth && !roomEast && roomSouth && roomWest)         // Rechte obere Ecke
-                {
-                    Debug.Log("RO");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, 90, pathGameObjects.RoomWithCorner);
-                }
-                else if (roomNorth && !roomEast && !roomSouth && roomWest)    // Rechte untere Ecke
-                {
-                    Debug.Log("RU");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, 180, pathGameObjects.RoomWithCorner);
-                }
-                else if (roomNorth && roomEast && !roomSouth && !roomWest)    // Linke untere Ecke
-                {
-                    Debug.Log("LU");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, -90, pathGameObjects.RoomWithCorner);
-                }
-                else if (!roomNorth && roomEast && roomSouth && !roomWest)    // Linke obere Ecke
-                {
-                    Debug.Log("LO");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, 0, pathGameObjects.RoomWithCorner);
-                }
-                else if (!roomNorth && roomEast && roomSouth && roomWest)                // Obere Kante
-                {
-                    Debug.Log("O");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, 180, pathGameObjects.RoomWithWall);
-                }
-                else if (roomNorth && !roomEast && roomSouth && roomWest)                 // Rechte Kante
-                {
-                    Debug.Log("R");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, 90, pathGameObjects.RoomWithWall);
-                }
-                else if (roomNorth && roomEast && !roomSouth && roomWest)                // Untere Kante
-                {
-                    Debug.Log("U");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, 0, pathGameObjects.RoomWithWall);
-                }
-                else if (roomNorth && roomEast && roomSouth && !roomWest)                 // Linke Kante
-                {
-                    Debug.Log("L");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, -90, pathGameObjects.RoomWithWall);
-                }
-                else if (roomNorth && roomEast && roomSouth && roomWest) // Irgendwo mitten drin
-                {
-                    Debug.Log("M");
-                    level.SetRoomObjectIntoCell(possibleRoom[y, x].row, possibleRoom[y, x].column, 0, pathGameObjects.RoomEmpty);
-                }
-            }
-        }
-    }
-
-    */
-
+    
     private void StartRoomGeneration (int x, int y){
     //private bool StartRoomGeneration (int x, int y){
         Maze_Cell cell = level.GetCellAt(x, y);
@@ -1068,8 +1007,9 @@ public class LevelGenerator : MonoBehaviour
         {
             case (false, false, false, false):
                 // Should be impossible but better save than sorry
+                Debug.Log((x,y));
                 Debug.LogError("So a glumb!");
-                break;
+                return false;
             case (true, true, true, true):
                 // X-Crossing, T-Crossing, Corridor, Corner and End are possible
                 if(probabilityXCrossing > 0 ) mco.Add((pathGameObjects.X_Crossing, probabilityXCrossing));

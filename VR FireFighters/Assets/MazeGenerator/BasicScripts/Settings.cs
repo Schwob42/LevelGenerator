@@ -29,10 +29,27 @@ public class Settings : MonoBehaviour
     [SerializeField]
     private GameObject seed;
 
-    // Pfadeinstellungen
+    // Pfadeinstellungen (Pos = Possibility)
+    [SerializeField]
+    private GameObject pos_Corridor;
+    [SerializeField]
+    private GameObject pos_Corner;
+    [SerializeField]
+    private GameObject pos_T_Crossing;
+    [SerializeField]
+    private GameObject pos_X_Crossing;
+    [SerializeField]
+    private GameObject pos_End;
+    [SerializeField]
+    private GameObject min_CorridorLenght;
 
     // Raumeinstellungen
-
+    [SerializeField]
+    private GameObject roomWidth;
+    [SerializeField]
+    private GameObject roomHeight;
+    [SerializeField]
+    private GameObject roomPossibility;
 
     // Start is called before the first frame update
     void Start()
@@ -44,11 +61,19 @@ public class Settings : MonoBehaviour
     {
         generatePath.GetComponent<Toggle>().isOn = settings.GetGeneratePath();
         generateRoom.GetComponent<Toggle>().isOn = settings.GetGenerateRoom();
-        levelWidth.GetComponent<Slider>().value = settings.GetMazeSize().mazeSizeX;
-        levelHeight.GetComponent<Slider>().value = settings.GetMazeSize().mazeSizeY;
+        levelWidth.GetComponent<Slider>().value = settings.GetMazeSizeX();
+        levelHeight.GetComponent<Slider>().value = settings.GetMazeSizeY();
         startPositionX.GetComponent<Slider>().value = settings.GetStartPosition().x;
         startPositionY.GetComponent<Slider>().value = settings.GetStartPosition().y;
         seed.GetComponent<TMP_InputField>().text = settings.GetSeed().ToString();
+        roomHeight.GetComponent<Slider>().value = settings.GetRoomSizeHeight();
+        roomWidth.GetComponent<Slider>().value = settings.GetRoomSizeWidth();
+        roomPossibility.GetComponent<Slider>().value = settings.GetRoomPossibility() * 100;
+        pos_Corridor.GetComponent<Slider>().value = settings.GetCorridorPossibility() * 100;
+        pos_Corner.GetComponent<Slider>().value = settings.GetCornerPossibility() * 100;
+        pos_X_Crossing.GetComponent<Slider>().value = settings.GetXCrossingPossibility() * 100;
+        pos_T_Crossing.GetComponent<Slider>().value = settings.GetTCrossingPossibility() * 100;
+        pos_End.GetComponent<Slider>().value = settings.GetEndPossibility() * 100;
     }
 
     // Setter und Getter für alle Einstellungen
@@ -87,5 +112,44 @@ public class Settings : MonoBehaviour
     }
 
     // - Pfadeinstellungen
+    public void SetCornerPossibility()
+    {
+        settings.SetCornerPossibility((pos_Corner.GetComponent<Slider>().value / 100));
+    }
+    public void SetCorridorPossibility()
+    {
+        settings.SetCorridorPossibility((pos_Corridor.GetComponent<Slider>().value / 100));
+    }
+    public void SetXCrossingPossibility()
+    {
+        settings.SetXCrossingPossibility((pos_X_Crossing.GetComponent<Slider>().value / 100));
+    }
+    public void SetTCrossingPossibility()
+    {
+        settings.SetTCrossingPossibility((pos_T_Crossing.GetComponent<Slider>().value / 100));
+    }
+    public void SetEndPossibility()
+    {
+        settings.SetEndPossibility((pos_End.GetComponent<Slider>().value / 100));
+    }
+    public void SetMinCorridorLength()
+    {
+        settings.SetMinCorridorLength((int)min_CorridorLenght.GetComponent<Slider>().value);
+    }
+
     // - Raumeinstellungen
+
+    public void SetStartRoomWidth()
+    {
+        settings.SetRoomSizeWidth((int)roomWidth.GetComponent<Slider>().value);
+    }
+    public void SetStartRoomHeight()
+    {
+        settings.SetRoomSizeHeight((int)roomHeight.GetComponent<Slider>().value);
+    }
+
+    public void SetRoomPossibility()
+    {
+        settings.SetRoomPossibility((roomPossibility.GetComponent<Slider>().value / 100));
+    }
 }

@@ -14,4 +14,9 @@ public class Navigation : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+    
+    public void NavigateToSettings()
+    {
+        SceneManager.LoadScene(2);
+    }
 }
