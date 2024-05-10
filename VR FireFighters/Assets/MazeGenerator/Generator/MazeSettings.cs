@@ -14,7 +14,7 @@ public class MazeSettings : ScriptableObject
     [SerializeField]
     private int startPositionX, startPositionY;
 
-    [SerializeField, Range(0, 10), Tooltip("Minimale L�nge eines Korridors, bis eine Kreuzung oder Kurve kommen darf. Enden sind von dieser Einstellung nicht betroffen")]
+    [SerializeField, Range(0, 10), Tooltip("Minimale Länge eines Korridors, bis eine Kreuzung oder Kurve kommen darf. Enden sind von dieser Einstellung nicht betroffen")]
     private int minLengthForCorridor;
 
     [SerializeField]
@@ -22,6 +22,7 @@ public class MazeSettings : ScriptableObject
 
     [SerializeField]
     private bool generatePath;
+    [SerializeField]
     private bool generateRoom;
 
     [Header("Wahrscheinlichkeiten f�r die einzelnen Bauteile.")]
@@ -37,6 +38,7 @@ public class MazeSettings : ScriptableObject
     [SerializeField, Tooltip("The size in number of cells per room"), Range(3, 10)] private int roomWidth;
     [SerializeField, Tooltip("The size in number of cells per room"), Range(3, 10)] private int roomHeight;
 
+    private List<RoomObject> rooms = new List<RoomObject>();
 
     /**
      * Checkt (teilweise) die Eingaben. 
@@ -59,6 +61,11 @@ public class MazeSettings : ScriptableObject
 
         if (startPositionX > mazeSizeX - 1) Debug.LogError("StartPositionX sollte < mazeSizeX sein");
         if (startPositionY > mazeSizeY - 1) Debug.LogError("StartPositionY sollte < mazeSizeY sein");
+    }
+
+    private void Awake()
+    {
+        rooms = new List<RoomObject>();
     }
 
     public (int x,int y) GetStartPosition()
@@ -88,8 +95,6 @@ public class MazeSettings : ScriptableObject
     {
         return this.mazeSizeY;
     }
-
-
 
     public void SetMazeSizeX(int mazeSizeX)
     {
@@ -223,4 +228,13 @@ public class MazeSettings : ScriptableObject
         this.generatePath = state;
     }
 
+    public List<RoomObject> GetRooms()
+    {
+        return this.rooms;
+    }
+
+    public void SetRooms(List<RoomObject> rooms)
+    {
+        this.rooms = rooms;
+    }
 }

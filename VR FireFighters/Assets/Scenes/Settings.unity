@@ -689,6 +689,15 @@ MonoBehaviour:
   startPositionX: {fileID: 1261543776}
   startPositionY: {fileID: 1504192964}
   seed: {fileID: 233491078}
+  pos_Corridor: {fileID: 0}
+  pos_Corner: {fileID: 0}
+  pos_T_Crossing: {fileID: 0}
+  pos_X_Crossing: {fileID: 0}
+  pos_End: {fileID: 0}
+  min_CorridorLenght: {fileID: 0}
+  roomWidth: {fileID: 0}
+  roomHeight: {fileID: 0}
+  roomPossibility: {fileID: 0}
 --- !u!114 &182897734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,9 +710,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 655ead98b6b594f4ca4b922e057226f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings: {fileID: 0}
+  prefabs: {fileID: 0}
   roomSettings: {fileID: 791225718}
   pathSettings: {fileID: 1047156483}
   generalSettings: {fileID: 980122993}
+  fire: {fileID: 0}
+  smoke: {fileID: 0}
+  person: {fileID: 0}
 --- !u!114 &182897735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3111,7 +3125,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 873087380}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &873087382
 Camera:
   m_ObjectHideFlags: 0

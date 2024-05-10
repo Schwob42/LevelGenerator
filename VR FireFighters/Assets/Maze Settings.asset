@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d015c2b25617ca47b4dc021bfc40860, type: 3}
   m_Name: Maze Settings
   m_EditorClassIdentifier: 
-  mazeSizeX: 16
+  mazeSizeX: 28
   mazeSizeY: 29
   startPositionX: 14
   startPositionY: 14
   minLengthForCorridor: 3
   seed: 20
   generatePath: 1
+  generateRoom: 1
   probabilityCorridor: 0.5
   probabilityCorner: 0.09
   probabilityEnd: 0.01

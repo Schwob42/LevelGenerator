@@ -22,6 +22,7 @@ public class LevelGenerator : MonoBehaviour
     
     
     private Maze_Field level;
+    private List<RoomObject> rooms;
 
     private int levelSizeX, levelSizeY;
 
@@ -39,9 +40,8 @@ public class LevelGenerator : MonoBehaviour
      */
     void Start ()
     {
-        //GenerateField();
+        levelGameobject = GameObject.Find("LevelGameObject");
     }
-
    
 
     public void GenerateField ()
@@ -64,6 +64,10 @@ public class LevelGenerator : MonoBehaviour
         probabilityXCrossing = probs.Item5;
 
         roomPossibility = generationSettings.GetRoomPossibility();
+
+        rooms = new List<RoomObject>();
+        generationSettings.SetRooms(rooms);
+
 
         if(levelGameobject.transform.childCount > 0)
         {
@@ -136,13 +140,15 @@ public class LevelGenerator : MonoBehaviour
         if (room != null && room.Count > 0)
         {
             InsertRoomPrefabs(room);
+            RoomObject roomObj = new RoomObject(rooms.Count, room);
+            rooms.Add(roomObj);
+            return true;
         }
         else
         {
             RemoveRoom(x, y, room);
+            return false;
         }
-
-        return CheckRoomForRequirements();
     }
 
     private List<Maze_Cell> GenerateRoom(int startX, int startY, Orientation direction)
@@ -209,13 +215,6 @@ public class LevelGenerator : MonoBehaviour
         GenerateRoomRekursiv(startX, startY, currentPositionX - 1, currentPositionY, room, direction);
         GenerateRoomRekursiv(startX, startY, currentPositionX, currentPositionY + 1, room, direction);
         GenerateRoomRekursiv(startX, startY, currentPositionX, currentPositionY - 1, room, direction);
-    }
-
-
-
-    private bool CheckRoomForRequirements()
-    {
-        return true;
     }
 
     /*
@@ -1067,7 +1066,6 @@ public class LevelGenerator : MonoBehaviour
         float objPos;
 
         while(mco.Count > 0){
-            //randomValue = Random.Range(0f, maxRange);
             randomValue = Random.value % maxRange;
             sum = 0;
             objToUse = null;
@@ -1096,9 +1094,7 @@ public class LevelGenerator : MonoBehaviour
                 }
                 else return true;
             }
-            else return true;
-
-           
+            else return true;           
         }
         
         if(insertToRedosIfNeeded) {

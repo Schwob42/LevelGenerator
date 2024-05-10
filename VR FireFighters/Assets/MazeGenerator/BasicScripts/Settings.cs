@@ -10,6 +10,8 @@ public class Settings : MonoBehaviour
     [SerializeField]
     private MazeSettings settings;
 
+    private List<RoomObject> rooms;
+
     // Allgemeine Einstellungen
     [SerializeField]
     private Toggle generatePath;
@@ -74,7 +76,25 @@ public class Settings : MonoBehaviour
         pos_X_Crossing.GetComponent<Slider>().value = settings.GetXCrossingPossibility() * 100;
         pos_T_Crossing.GetComponent<Slider>().value = settings.GetTCrossingPossibility() * 100;
         pos_End.GetComponent<Slider>().value = settings.GetEndPossibility() * 100;
+        rooms = settings.GetRooms();
     }
+
+    // Räume haben an sich keinen Namen, aber zur Übersicht werden welche erzeugt
+    public List<string> GetRoomNames()
+    {
+        rooms = settings.GetRooms();
+        if (rooms == null) return new List<string>();
+
+        List<string> roomNames = new List<string>();
+
+        foreach (RoomObject room in rooms)
+        {
+            roomNames.Add(room.GetRoomName());
+        }
+
+        return roomNames;
+    } 
+
 
     // Setter und Getter für alle Einstellungen
     // - Allgemeine Einstellungen
