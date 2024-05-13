@@ -5,43 +5,56 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 
+/// <summary>
+/// This script manages the local settings and the settings saved in the corresponding file.
+/// Settings are only saved permanently once they have been saved in the relevant file.
+/// </summary>
 public class Settings : MonoBehaviour
 {
+    /// <summary>
+    /// Reference to the file containing the saved settings.
+    /// </summary>
     [SerializeField]
     private MazeSettings settings;
 
+    /// <summary>
+    /// A list of all rooms in the level.
+    /// </summary>
     private List<RoomObject> rooms;
 
-    // Allgemeine Einstellungen
+    ////////// General settings
     [SerializeField]
     private Toggle generatePath;
+
     [SerializeField]
-    private GameObject generateRoom;
+    private Toggle generateRoom;
 
     [SerializeField]
     private GameObject levelWidth;
+
     [SerializeField]
     private GameObject levelHeight;
 
     [SerializeField]
     private GameObject startPositionX;
+
     [SerializeField]
     private GameObject startPositionY;
 
     [SerializeField]
     private GameObject seed;
 
-    // Pfadeinstellungen (Pos = Possibility)
+    ////////// Path settings (pro = probability)
     [SerializeField]
-    private GameObject pos_Corridor;
+    private GameObject pro_Corridor;
     [SerializeField]
-    private GameObject pos_Corner;
+    private GameObject pro_Corner;
     [SerializeField]
-    private GameObject pos_T_Crossing;
+    private GameObject pro_T_Crossing;
     [SerializeField]
-    private GameObject pos_X_Crossing;
+    private GameObject pro_X_Crossing;
     [SerializeField]
-    private GameObject pos_End;
+    private GameObject pro_End;
     [SerializeField]
     private GameObject min_CorridorLenght;
 
@@ -59,6 +72,9 @@ public class Settings : MonoBehaviour
         GetSettings();
     }
 
+    /// <summary>
+    /// Loads every saved setting from the file and sets the value of each setting game object.
+    /// </summary>
     private void GetSettings()
     {
         generatePath.GetComponent<Toggle>().isOn = settings.GetGeneratePath();
@@ -71,15 +87,19 @@ public class Settings : MonoBehaviour
         roomHeight.GetComponent<Slider>().value = settings.GetRoomSizeHeight();
         roomWidth.GetComponent<Slider>().value = settings.GetRoomSizeWidth();
         roomPossibility.GetComponent<Slider>().value = settings.GetRoomPossibility() * 100;
-        pos_Corridor.GetComponent<Slider>().value = settings.GetCorridorPossibility() * 100;
-        pos_Corner.GetComponent<Slider>().value = settings.GetCornerPossibility() * 100;
-        pos_X_Crossing.GetComponent<Slider>().value = settings.GetXCrossingPossibility() * 100;
-        pos_T_Crossing.GetComponent<Slider>().value = settings.GetTCrossingPossibility() * 100;
-        pos_End.GetComponent<Slider>().value = settings.GetEndPossibility() * 100;
+        pro_Corridor.GetComponent<Slider>().value = settings.GetCorridorPossibility() * 100;
+        pro_Corner.GetComponent<Slider>().value = settings.GetCornerPossibility() * 100;
+        pro_X_Crossing.GetComponent<Slider>().value = settings.GetXCrossingPossibility() * 100;
+        pro_T_Crossing.GetComponent<Slider>().value = settings.GetTCrossingPossibility() * 100;
+        pro_End.GetComponent<Slider>().value = settings.GetEndPossibility() * 100;
         rooms = settings.GetRooms();
     }
 
-    // Räume haben an sich keinen Namen, aber zur Übersicht werden welche erzeugt
+    /// <summary>
+    /// Generates names (like "room 1") for each room. Keep in mind that a room or the room game object has no name to reference!
+    /// The room names are generated to give the user a reference point for room selection in the UI.
+    /// </summary>
+    /// <returns>List of names of the rooms</returns>
     public List<string> GetRoomNames()
     {
         rooms = settings.GetRooms();
@@ -95,19 +115,17 @@ public class Settings : MonoBehaviour
         return roomNames;
     } 
 
-
-    // Setter und Getter für alle Einstellungen
-    // - Allgemeine Einstellungen
+    ////////////////////////////////////////
+    /////// Setter methodes for all settings
+    ///// General settings
     public void SetGeneratePath()
     {
         settings.SetGeneratePath(generatePath.GetComponent<Toggle>().isOn);
-    }
-    
+    }    
     public void SetGenerateRoom()
     {
         settings.SetGenerateRoom(generateRoom.GetComponent<Toggle>().isOn);
     }
-
     public void SetMazeSizeX()
     {
         settings.SetMazeSizeX((int)levelWidth.GetComponent<Slider>().value);
@@ -116,7 +134,6 @@ public class Settings : MonoBehaviour
     {
         settings.SetMazeSizeY((int)levelHeight.GetComponent<Slider>().value);
     }
-
     public void SetStartPositionX()
     {
         settings.SetStartPositionX((int)startPositionX.GetComponent<Slider>().value);
@@ -125,40 +142,38 @@ public class Settings : MonoBehaviour
     {
         settings.SetStartPositionY((int)startPositionY.GetComponent<Slider>().value);
     }
-
     public void SetSeed()
     {
         settings.SetSeed(Int32.Parse(seed.GetComponent<TMP_InputField>().text));
     }
 
-    // - Pfadeinstellungen
+    ///// Path settings
     public void SetCornerPossibility()
     {
-        settings.SetCornerPossibility((pos_Corner.GetComponent<Slider>().value / 100));
+        settings.SetCornerPossibility((pro_Corner.GetComponent<Slider>().value / 100));
     }
     public void SetCorridorPossibility()
     {
-        settings.SetCorridorPossibility((pos_Corridor.GetComponent<Slider>().value / 100));
+        settings.SetCorridorPossibility((pro_Corridor.GetComponent<Slider>().value / 100));
     }
     public void SetXCrossingPossibility()
     {
-        settings.SetXCrossingPossibility((pos_X_Crossing.GetComponent<Slider>().value / 100));
+        settings.SetXCrossingPossibility((pro_X_Crossing.GetComponent<Slider>().value / 100));
     }
     public void SetTCrossingPossibility()
     {
-        settings.SetTCrossingPossibility((pos_T_Crossing.GetComponent<Slider>().value / 100));
+        settings.SetTCrossingPossibility((pro_T_Crossing.GetComponent<Slider>().value / 100));
     }
     public void SetEndPossibility()
     {
-        settings.SetEndPossibility((pos_End.GetComponent<Slider>().value / 100));
+        settings.SetEndPossibility((pro_End.GetComponent<Slider>().value / 100));
     }
     public void SetMinCorridorLength()
     {
         settings.SetMinCorridorLength((int)min_CorridorLenght.GetComponent<Slider>().value);
     }
 
-    // - Raumeinstellungen
-
+    ///// Room settings
     public void SetStartRoomWidth()
     {
         settings.SetRoomSizeWidth((int)roomWidth.GetComponent<Slider>().value);
@@ -167,7 +182,6 @@ public class Settings : MonoBehaviour
     {
         settings.SetRoomSizeHeight((int)roomHeight.GetComponent<Slider>().value);
     }
-
     public void SetRoomPossibility()
     {
         settings.SetRoomPossibility((roomPossibility.GetComponent<Slider>().value / 100));
