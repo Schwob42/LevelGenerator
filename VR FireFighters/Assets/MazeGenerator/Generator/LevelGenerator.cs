@@ -54,7 +54,7 @@ public class LevelGenerator : MonoBehaviour
         levelSizeY = generationSettings.GetMazeSizeY();
 
         // Kamera ausrichten
-        this.gameObject.GetComponent<SetLevelCamera>().SetCameraPosition(levelSizeX, levelSizeY);
+        this.gameObject.GetComponent<LevelCamera>().SetCameraPosition(levelSizeX, levelSizeY);
 
         (float, float, float, float, float) probs = generationSettings.GetProbabilities();
         probabilityCorridor = probs.Item1;
@@ -216,78 +216,6 @@ public class LevelGenerator : MonoBehaviour
         GenerateRoomRekursiv(startX, startY, currentPositionX, currentPositionY + 1, room, direction);
         GenerateRoomRekursiv(startX, startY, currentPositionX, currentPositionY - 1, room, direction);
     }
-
-    /*
-
-    /// <summary>
-    /// Startmethode für die Raumgenerrierung. Ruft im weiteren Verlauf die rekursive Methode zur Raumgenerierung (<see cref="GenerateRoomRecursive"/>) auf
-    /// </summary>
-    /// <param name="startPosition_x">Position des Raumstarts in x Koordinate</param>
-    /// <param name="startPosition_y">Position des Raumstarts in y Koordinate</param>
-    /// <param name="possibleRoom">Array des möglichen Raums</param>
-    /// <param name="direction">Richtung, von der Tür des Ganges aus, in die gebaut werden soll</param>
-    private void GenerateRoom(int startPosition_x, int startPosition_y, (int row, int column)[,] possibleRoom, Orientation direction)   // Orientierung bedeutet, in Welche Richtung von der Tür aus gebaut wird
-    {
-        int mappedStart_x = -1;
-        int mappedStart_y = -1;
-
-        //only needed in case the start could not be set
-        int original_startPosition_x = startPosition_x;
-        int original_startPosition_y = startPosition_y;
-
-        int rotationStart = 0;
-
-        
-        // (0,0) (0,1) .... (0,n)       n = GetLength(1)
-        // (1,0) (1,1) .... (1,n)       m = GetLength(0)
-        // ..... ..... .... (.,n)
-        // (m,0) (m,1) .... (m,n)
-        
-        switch (direction)
-        {
-            case Orientation.North:
-                mappedStart_x = (int)Mathf.Round(possibleRoom.GetLength(1) / 2);    // halbe Breite
-                mappedStart_y = possibleRoom.GetLength(0) - 1;                      // untere Kante
-                startPosition_y += 1;                                               // wäre sonst auf dem Gang
-                rotationStart = -90;
-                break;
-            case Orientation.East:
-                mappedStart_x = 0;                                                  // ganze Breite
-                mappedStart_y = (int)Mathf.Round(possibleRoom.GetLength(0) / 2);    // halbe Höhe
-                startPosition_x += 1;                                               // wäre sonst auf dem Gang
-                rotationStart = 0;
-                break;
-            case Orientation.West:
-                mappedStart_x = possibleRoom.GetLength(1) - 1;                      // linke Kante
-                mappedStart_y = (int)Mathf.Round(possibleRoom.GetLength(0) / 2);    // Halbe Höhe
-                startPosition_x -= 1;                                               // wäre sonst auf dem Gang
-                rotationStart = 180;
-                break;
-            case Orientation.South:
-                mappedStart_x = (int)Mathf.Round(possibleRoom.GetLength(1) / 2);    // Halbe Breite
-                mappedStart_y = 0;                                                  // Untere Kante
-                startPosition_y -= 1;                                               // wäre sonst auf dem Gang
-                rotationStart = 90;
-                break;
-        }
-
-        Debug.Log(mappedStart_x + " " + mappedStart_y);
-        possibleRoom[mappedStart_y, mappedStart_x] = (startPosition_x, startPosition_y);
-
-        if (!level.SetRoomObjectIntoCell(startPosition_x, startPosition_y, rotationStart, pathGameObjects.RoomWithDoor))
-        {
-            level.ReplaceCellObject(original_startPosition_x, original_startPosition_y, pathGameObjects);
-            possibleRoom = null;
-            return;
-        }
-        
-        GenerateRoomRecursive(possibleRoom, (mappedStart_x, mappedStart_y+1), (mappedStart_x, mappedStart_y), (startPosition_x, startPosition_y));
-        GenerateRoomRecursive(possibleRoom, (mappedStart_x+1, mappedStart_y), (mappedStart_x, mappedStart_y), (startPosition_x, startPosition_y));
-        GenerateRoomRecursive(possibleRoom, (mappedStart_x, mappedStart_y-1), (mappedStart_x, mappedStart_y), (startPosition_x, startPosition_y));
-        GenerateRoomRecursive(possibleRoom, (mappedStart_x-1, mappedStart_y), (mappedStart_x, mappedStart_y), (startPosition_x, startPosition_y));    
-    }
-
-    */
 
     /// <summary>
     /// Rekursive Methode zur Raumgenerierung. 
@@ -455,98 +383,6 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    /**
-    X und y sind die Startposition des Raums, also die Stelle, wo man durch die Türe kommt (und schon im Raum steht).
-    orientation ist die Richtung, in die der Raum erweitert werden soll
-    stepsOn(X/Y)Axis sind die Anzahl an Schritten, die in die jeweilige Richtung bereits gemacht wurden. Diese darf nie größer als die maxWidth/Height) aus den Settings ein
-    */
-    /*
-    private void TryToBuildRoom(int x, int y, List<(int x, int y)> possibleRoom, Orientation orientation, bool isStart=false) {
-        Debug.Log(possibleRoom.Count);
-        
-        // Endbedingung für rekursives Bauen des Raums
-        if(possibleRoom.Count == generationSettings.GetRoomSettings().maxRoomSize){
-            return;
-        }
-        
-        if(isStart){
-            // Build Room with Door 
-
-            switch (orientation){
-                case Orientation.North:
-                    if(!level.SetRoomObjectIntoCell(x, y, -90, pathGameObjects.RoomWithDoor)){
-                        return;
-                    }
-                    possibleRoom.Add((x, y));
-                    break;
-                
-                case Orientation.East:
-                    if(!level.SetRoomObjectIntoCell(x, y, 0, pathGameObjects.RoomWithDoor)){
-                        return;
-                    }
-                    possibleRoom.Add((x, y));
-                    break;
-                
-                case Orientation.South:
-                    if(!level.SetRoomObjectIntoCell(x, y, 90, pathGameObjects.RoomWithDoor)){
-                        return;
-                    }
-                    possibleRoom.Add((x, y));
-                    break;
-
-                case Orientation.West:
-                    if(!level.SetRoomObjectIntoCell(x, y, 180, pathGameObjects.RoomWithDoor)){
-                        return;
-                    }
-                    possibleRoom.Add((x, y));
-                    break;
-            }
-        }
-        else {
-            switch (orientation){
-                case Orientation.North:
-                    level.SetRoomObjectIntoCell(x, y, -90, pathGameObjects.RoomEmpty);
-                    possibleRoom.Add((x, y));
-                    break;
-                
-                case Orientation.East:
-                    level.SetRoomObjectIntoCell(x, y, 0, pathGameObjects.RoomEmpty);
-                    possibleRoom.Add((x, y));
-                    break;
-                
-                case Orientation.South:
-                    level.SetRoomObjectIntoCell(x, y, 90, pathGameObjects.RoomEmpty);
-                    possibleRoom.Add((x, y));
-                    break;
-
-                case Orientation.West:
-                    level.SetRoomObjectIntoCell(x, y, 180, pathGameObjects.RoomEmpty);
-                    possibleRoom.Add((x, y));
-                    break;
-            } 
-        }
-
-
-        // Rekursive Aufrufe
-
-        //Bauen nach Norden 
-        if(level.CellExists(x, y+1) && level.GetCellAt(x, y+1).GetMazeCellState() == MazeCellState.Empty){
-            TryToBuildRoom(x, y+1, possibleRoom, Orientation.North);
-        }
-        // Bauen nach Osten
-        if(level.CellExists(x+1, y) && level.GetCellAt(x+1, y).GetMazeCellState() == MazeCellState.Empty){
-            TryToBuildRoom(x+1, y, possibleRoom, Orientation.East);
-        }
-        // Bauen nach Süden
-        if(level.CellExists(x, y-1) && level.GetCellAt(x, y-1).GetMazeCellState() == MazeCellState.Empty){
-            TryToBuildRoom(x, y-1, possibleRoom, Orientation.South);
-        }
-        // Bauen nach Westen
-        if(level.CellExists(x-1, y) && level.GetCellAt(x-1, y).GetMazeCellState() == MazeCellState.Empty){
-            TryToBuildRoom(x-1, y, possibleRoom, Orientation.West);
-        }
-    }
-    */
     private void StartPathGeneration ()
     {
         
