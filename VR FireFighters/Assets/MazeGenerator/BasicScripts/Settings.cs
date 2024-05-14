@@ -113,7 +113,8 @@ public class Settings : MonoBehaviour
         }
 
         return roomNames;
-    } 
+    }
+
 
     ////////////////////////////////////////
     /////// Setter methodes for all settings
