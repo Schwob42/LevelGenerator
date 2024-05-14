@@ -1532,7 +1532,7 @@ GameObject:
   - component: {fileID: 90286910}
   - component: {fileID: 90286909}
   m_Layer: 5
-  m_Name: Button_Prefabs
+  m_Name: Button_Settings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9475,17 +9475,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 1bc22615ad37fc74b888ad673c5b3026, type: 2}
   generatePath: {fileID: 704138228}
-  generateRoom: {fileID: 1391117529}
+  generateRoom: {fileID: 1391117530}
   levelWidth: {fileID: 1383672017}
   levelHeight: {fileID: 162390957}
   startPositionX: {fileID: 1750265319}
   startPositionY: {fileID: 583980534}
   seed: {fileID: 9322546}
-  pos_Corridor: {fileID: 549344948}
-  pos_Corner: {fileID: 246415138}
-  pos_T_Crossing: {fileID: 270522545}
-  pos_X_Crossing: {fileID: 1663541187}
-  pos_End: {fileID: 276739666}
+  pro_Corridor: {fileID: 549344948}
+  pro_Corner: {fileID: 246415138}
+  pro_T_Crossing: {fileID: 270522545}
+  pro_X_Crossing: {fileID: 1663541187}
+  pro_End: {fileID: 276739666}
   min_CorridorLenght: {fileID: 508587619}
   roomWidth: {fileID: 687326849}
   roomHeight: {fileID: 848083946}
@@ -13125,11 +13125,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0300a38eb99e49c42adbd8255a32eb9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pos_Corridor: {fileID: 549344948}
-  pos_Corner: {fileID: 246415138}
-  pos_T_Crossing: {fileID: 270522545}
-  pos_X_Crossing: {fileID: 1663541187}
-  pos_End: {fileID: 276739666}
+  probability_Corridor: {fileID: 549344948}
+  probability_Corner: {fileID: 246415138}
+  probability_T_Crossing: {fileID: 270522545}
+  probability_X_Crossing: {fileID: 1663541187}
+  probability_End: {fileID: 276739666}
   generatorButton: {fileID: 1640804246}
   valueField: {fileID: 1303826547}
 --- !u!1 &1155148263
