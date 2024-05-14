@@ -233,6 +233,20 @@ public class MazeSettings : ScriptableObject
         return this.rooms;
     }
 
+    public RoomObject TryGetRoom(string name)
+    {
+        Debug.Log("Get Raum " + name);
+        foreach(RoomObject room in rooms)
+        {
+            Debug.Log("Habe Raum " + room.GetRoomName());
+            if (room.GetRoomName().Equals(name))
+            {
+                return room;
+            }
+        }
+        return null;
+    }
+
     public void SetRooms(List<RoomObject> rooms)
     {
         this.rooms = rooms;

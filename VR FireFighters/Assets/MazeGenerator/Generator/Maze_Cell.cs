@@ -29,6 +29,13 @@ public class Maze_Cell
      * The object to set into the cell. Could be null.
      */
     private MazeCellGameObject mazeCellGameObject; 
+
+    /**
+     * The placeholder for fire, smoke and person
+     */
+    private List<GameObject> additionalPrefabs;
+
+    private bool fireInRoom;
     
     public readonly int x;
     public readonly int y;
@@ -43,10 +50,19 @@ public class Maze_Cell
         this.passageWestOriginal = this.passageWest = passageWest;
         this.x = x;
         this.y = y;
+        this.additionalPrefabs = new List<GameObject>();
+        this.fireInRoom = false;
     }
 
    
-
+    public void AddAdditionalPrefabFire(GameObject go)
+    {
+        if (this.fireInRoom) return;
+        this.additionalPrefabs.Add(go);
+        go.transform.parent = mazeCellGameObject.transform;
+        go.transform.localPosition = new Vector3(0, 0, 0);
+        this.fireInRoom = true;
+    }
 
     /**
      * Pr�ft, ob ein �bergebenes Objekt in die Zelle passt.

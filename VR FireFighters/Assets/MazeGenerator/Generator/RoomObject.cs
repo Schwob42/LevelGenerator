@@ -36,7 +36,7 @@ public class RoomObject : ScriptableObject
     /// <param name="number">The wished name if the room.</param>
     private void SetName(int number)
     {
-        name = "Raum " + number;
+        this.name = "Raum " + number;
     }
 
     /// <summary>
@@ -46,12 +46,17 @@ public class RoomObject : ScriptableObject
     {
         GameObject UI_Name = Instantiate(UI);
         UI_Name.transform.SetParent(roomPrefabs[0].GetMazeCellGameObject().gameObject.transform);
-        UI_Name.transform.localPosition = new Vector3(2, 1, 0);
+        UI_Name.transform.localPosition = new Vector3(2, 3, 0);
         UI_Name.GetComponent<UI_Name>().SetName(name);
     } 
 
     public string GetRoomName()
     {
         return name;
+    }
+
+    public List<Maze_Cell> GetRoomCells()
+    {
+        return this.roomPrefabs;
     }
 }
