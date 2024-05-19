@@ -1,0 +1,20 @@
+{
+    "mazeSizeX": 40,
+    "mazeSizeY": 39,
+    "startPositionX": 14,
+    "startPositionY": 14,
+    "minLengthForCorridor": 3,
+    "seed": 20,
+    "generatePath": true,
+    "generateRoom": true,
+    "probabilityCorridor": 0.5,
+    "probabilityCorner": 0.09000000357627869,
+    "probabilityEnd": 0.009999999776482582,
+    "probabilityTCrossing": 0.20000000298023225,
+    "probabilityXCrossing": 0.20000000298023225,
+    "roomPossibility": 0.8700000047683716,
+    "minRoomSize": 1,
+    "maxRoomSize": 2,
+    "roomWidth": 6,
+    "roomHeight": 5
+}
