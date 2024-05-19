@@ -116,14 +116,14 @@ public class SettingsTabs: MonoBehaviour
                 fire.SetActive(false);
                 smoke.SetActive(true);
                 person.SetActive(false);
-                fire.GetComponent<RoomDropdown>().ReloadRooms();
+                smoke.GetComponent<RoomDropdown>().ReloadRooms();
                 break;
             case 5:     // (missed) Person settings
                 if (!prefabs.active) return;
                 fire.SetActive(false);
                 smoke.SetActive(false);
                 person.SetActive(true);
-                fire.GetComponent<RoomDropdown>().ReloadRooms();
+                //person.GetComponent<RoomDropdown>().ReloadRooms();
                 break;
 
         }

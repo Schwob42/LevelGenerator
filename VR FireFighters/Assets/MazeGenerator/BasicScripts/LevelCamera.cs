@@ -10,6 +10,8 @@ public class LevelCamera : MonoBehaviour
 
     /// <summary>
     /// Sets the camera to the center of the level.
+    /// Hint: One cell in the level has a size of x=y=2 as floor area.
+    /// This means that the width of the plane is only half the actual width. It is the same with the height.
     /// </summary>
     /// <param name="x">The level width</param>
     /// <param name="y">The level hight</param>
