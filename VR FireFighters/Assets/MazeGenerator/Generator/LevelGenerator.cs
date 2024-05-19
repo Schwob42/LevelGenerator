@@ -41,6 +41,10 @@ public class LevelGenerator : MonoBehaviour
     void Start ()
     {
         levelGameobject = GameObject.Find("LevelGameObject");
+
+        levelSizeX = generationSettings.GetMazeSizeX();
+        levelSizeY = generationSettings.GetMazeSizeY();
+        this.gameObject.GetComponent<LevelCamera>().SetCameraPosition(levelSizeX, levelSizeY);
     }
    
 

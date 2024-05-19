@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class FirePlacement : MonoBehaviour
+public class SmokePlacement : MonoBehaviour
 {
     [SerializeField]
     private GameObject dropdown;
@@ -11,18 +11,18 @@ public class FirePlacement : MonoBehaviour
     [SerializeField]
     private MazeSettings settings;
 
-    private GameObject fire;
+    private GameObject smoke;
 
     private RoomObject room;
 
     // Start is called before the first frame update
     void Start()
     {
-        fire = Resources.Load<GameObject>("Fire");
+        smoke = Resources.Load<GameObject>("Smoke2");
         room = null;
     }
 
-    public void PlaceFire()
+    public void PlaceSmoke()
     {
         string roomName = dropdown.GetComponent<TMP_Dropdown>().options[dropdown.GetComponent<TMP_Dropdown>().value].text;
 
@@ -31,12 +31,11 @@ public class FirePlacement : MonoBehaviour
         if (room == null) return;
         foreach(Maze_Cell cell in room.GetRoomCells())
         {
-            if (Random.Range(0f, 1f) > 0.5f) continue;  //TODO let choose in settings
-            GameObject fire_GO = Instantiate(fire);
-            if (!cell.AddAdditionalPrefabFire(fire_GO))
+            GameObject fire_GO = Instantiate(smoke);
+            if (!cell.AddAdditionalPrefabSmoke(fire_GO))
             {
                 Destroy(fire_GO, 0f);
-            }
+            }                
         }
     }
 }

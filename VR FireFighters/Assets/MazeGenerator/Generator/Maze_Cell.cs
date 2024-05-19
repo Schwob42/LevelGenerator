@@ -36,6 +36,7 @@ public class Maze_Cell
     private List<GameObject> additionalPrefabs;
 
     private bool fireInRoom;
+    private bool smokeInRoom;
     
     public readonly int x;
     public readonly int y;
@@ -52,16 +53,27 @@ public class Maze_Cell
         this.y = y;
         this.additionalPrefabs = new List<GameObject>();
         this.fireInRoom = false;
+        this.smokeInRoom = false;
     }
 
    
-    public void AddAdditionalPrefabFire(GameObject go)
+    public bool AddAdditionalPrefabFire(GameObject go)
     {
-        if (this.fireInRoom) return;
+        if (this.fireInRoom) return false;
         this.additionalPrefabs.Add(go);
         go.transform.parent = mazeCellGameObject.transform;
         go.transform.localPosition = new Vector3(0, 0, 0);
         this.fireInRoom = true;
+        return true;
+    }
+    public bool AddAdditionalPrefabSmoke(GameObject go)
+    {
+        if (this.smokeInRoom) return false;
+        this.additionalPrefabs.Add(go);
+        go.transform.parent = mazeCellGameObject.transform;
+        go.transform.localPosition = new Vector3(0, 1, 0);
+        this.smokeInRoom = true;
+        return true;
     }
 
     /**

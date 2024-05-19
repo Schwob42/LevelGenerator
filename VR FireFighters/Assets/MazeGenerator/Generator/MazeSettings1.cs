@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
 
-public class MazeSettings : ScriptableObject
+public class MazeSettings1
 {
     [SerializeField]
     private int mazeSizeX;
@@ -39,34 +38,6 @@ public class MazeSettings : ScriptableObject
     [SerializeField, Tooltip("The size in number of cells per room"), Range(3, 10)] private int roomHeight;
 
     private List<RoomObject> rooms = new List<RoomObject>();
-
-    /**
-     * Checkt (teilweise) die Eingaben. 
-     * 
-     * 
-     * TODO: Fehler in UI anzeigen und Start des Generator verhindern. Bspw. durch das Deaktivieren eines Generate Buttons
-     */
-    private void OnValidate()
-    {
-        float sum = probabilityCorridor + probabilityCorner + probabilityEnd + probabilityTCrossing + probabilityXCrossing;
-        if (sum != 1f)
-        {
-            Debug.LogError("Summe muss 1 ergeben, but is " + sum);
-        }
-
-        if(minRoomSize > maxRoomSize)
-        {
-            Debug.LogError("Es ergibt wohl nur wenig Sinn, wenn Minimum gr��er Maximum sein soll ;)");
-        }
-
-        if (startPositionX > mazeSizeX - 1) Debug.LogError("StartPositionX sollte < mazeSizeX sein");
-        if (startPositionY > mazeSizeY - 1) Debug.LogError("StartPositionY sollte < mazeSizeY sein");
-    }
-
-    private void Awake()
-    {
-        rooms = new List<RoomObject>();
-    }
 
     // TODO delete
     public (int x,int y) GetStartPosition()
