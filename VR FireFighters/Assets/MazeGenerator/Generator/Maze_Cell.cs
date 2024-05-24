@@ -37,6 +37,7 @@ public class Maze_Cell
 
     private bool fireInRoom;
     private bool smokeInRoom;
+    private bool personInRoom;
     
     public readonly int x;
     public readonly int y;
@@ -73,6 +74,15 @@ public class Maze_Cell
         go.transform.parent = mazeCellGameObject.transform;
         go.transform.localPosition = new Vector3(0, 1, 0);
         this.smokeInRoom = true;
+        return true;
+    }
+    public bool AddAdditionalPrefabPerson(GameObject go)
+    {
+        if (this.personInRoom) return false;
+        this.additionalPrefabs.Add(go);
+        go.transform.parent = mazeCellGameObject.transform;
+        go.transform.localPosition = new Vector3(0, 0.22f, 0);
+        this.personInRoom = true;
         return true;
     }
 

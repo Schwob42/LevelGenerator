@@ -123,7 +123,7 @@ public class SettingsTabs: MonoBehaviour
                 fire.SetActive(false);
                 smoke.SetActive(false);
                 person.SetActive(true);
-                //person.GetComponent<RoomDropdown>().ReloadRooms();
+                person.GetComponent<RoomDropdown>().ReloadRooms();
                 break;
 
         }
