@@ -96,11 +96,21 @@ public class Settings : MonoBehaviour
             return false;
         }
 
+        
+
         string fileContent = File.ReadAllText(path + "settings.json");
 
-        this.m_Settings = JsonUtility.FromJson<MazeSettings1>(fileContent);
-
-        return true;
+        if(fileContent == null || fileContent == "")
+        {
+            Debug.LogError("File is empty");
+            m_Settings = new MazeSettings1();
+            return true;
+        }
+        else
+        {
+            this.m_Settings = JsonUtility.FromJson<MazeSettings1>(fileContent);
+            return true;
+        }
     }
 
     public void SaveDataToFile()
@@ -146,6 +156,7 @@ public class Settings : MonoBehaviour
 
         // TEST
         /**/
+        Debug.Log(m_Settings.GetGeneratePath());
         generatePath.GetComponent<Toggle>().isOn = m_Settings.GetGeneratePath();
         generateRoom.GetComponent<Toggle>().isOn = m_Settings.GetGenerateRoom();
         levelWidth.GetComponent<Slider>().value = m_Settings.GetMazeSizeX();
