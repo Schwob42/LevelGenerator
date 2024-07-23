@@ -78,7 +78,7 @@ public class Settings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetSettings();
+        GetDataFromSaveFile();
     }
     
     // Nur zur Sicherheit
@@ -89,18 +89,36 @@ public class Settings : MonoBehaviour
 
     public bool GetDataFromSaveFile()
     {
-        if (!File.Exists(path + "settings.json"))
+        m_Settings = new MazeSettings1();
+
+
+        if (!File.Exists(path + "personal_settings.json"))
         {
-            Debug.LogError("File not found");
-            m_Settings = new MazeSettings1();
-            return false;
+            Debug.LogError("Personal file not found");
+
+            if (!File.Exists(path + "settings.json"))
+            {
+                Debug.LogError("Settings file not found");
+                return false;
+            }
+            else
+            {
+                string fileContent = File.ReadAllText(path + "settings.json");
+
+                m_Settings = JsonUtility.FromJson<MazeSettings1>(fileContent);
+                GetSettings();
+                return false;
+            }
         }
+        else
+        {
+            string fileContent = File.ReadAllText(path + "personal_settings.json");
 
-        string fileContent = File.ReadAllText(path + "settings.json");
-
-        this.m_Settings = JsonUtility.FromJson<MazeSettings1>(fileContent);
-
-        return true;
+            m_Settings = JsonUtility.FromJson<MazeSettings1>(fileContent);
+            GetSettings();
+            return true;
+        }
+        
     }
 
     public void SaveDataToFile()
@@ -108,7 +126,7 @@ public class Settings : MonoBehaviour
         //File.WriteAllText(Application.persistentDataPath + "/gamedata.json", JsonUtility.ToJson(this.settings));
         string jsonString = JsonUtility.ToJson(this.m_Settings, true);
         Debug.Log("Saving file with\n"+ jsonString);
-        File.WriteAllText(path + "settings.json", jsonString);
+        File.WriteAllText(path + "personal_settings.json", jsonString);
 
     }
 
@@ -117,13 +135,6 @@ public class Settings : MonoBehaviour
     /// </summary>
     private void GetSettings()
     {
-        if (!GetDataFromSaveFile())
-        {
-            // TODO
-            // Return to start and show error messag
-
-            return;
-        }
         /*  ORIGINAL
         generatePath.GetComponent<Toggle>().isOn = settings.GetGeneratePath();
         generateRoom.GetComponent<Toggle>().isOn = settings.GetGenerateRoom();
