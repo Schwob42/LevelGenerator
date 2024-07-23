@@ -119,6 +119,8 @@ public class Settings : MonoBehaviour
 
     }
 
+
+
     /// <summary>
     /// Generates names (like "room 1") for each room. Keep in mind that a room or the room game object has no name to reference!
     /// The room names are generated to give the user a reference point for room selection in the UI.
