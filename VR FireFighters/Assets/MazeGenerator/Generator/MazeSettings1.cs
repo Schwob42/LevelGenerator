@@ -39,29 +39,6 @@ public class MazeSettings1
 
     private List<RoomObject> rooms = new List<RoomObject>();
 
-
-    public MazeSettings1()
-    {
-        this.mazeSizeX = 20;
-        this.mazeSizeY = 20;
-        this.startPositionX = startPositionY = 0;
-        this.minLengthForCorridor = 3;
-        this.seed = 0;
-        this.generatePath = this.generateRoom = true;
-
-        this.probabilityCorridor = 0.50f;
-        this.probabilityCorner = 0.20f;
-        this.probabilityTCrossing = 0.15f;
-        this.probabilityXCrossing = 0.10f;
-        this.probabilityEnd = 0.05f;
-
-        this.roomPossibility = 0.20f;
-        this.minRoomSize = 5;
-        this.maxRoomSize = 10;
-        this.roomWidth = this.roomHeight = 7;
-    }
-
-
     // TODO delete
     public (int x,int y) GetStartPosition()
     {
