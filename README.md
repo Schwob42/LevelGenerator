@@ -15,6 +15,8 @@ This repository contains a prototype for a **level generator** used in a **virtu
    ```bash
    git clone https://github.com/Schwob42/LevelGenerator.git
 
+2. Unity mit Version und den Assets für Feuer, Rauch und dem Dummy...
+
 ## Usage:
   This VR training prototype is used to simulate environments where firefighters can practice navigating through random building layouts, responding to different emergency situations, and improving spatial awareness.
   - VR Simulation: Firefighters navigate through a smoke-filled building to simulate real-life emergency scenarios.
