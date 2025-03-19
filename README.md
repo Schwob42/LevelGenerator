@@ -15,7 +15,7 @@ This repository contains a prototype for a **level generator** used in a **virtu
    ```bash
    git clone https://github.com/Schwob42/LevelGenerator.git
 
-2. Unity mit Version und den Assets für Feuer, Rauch und dem Dummy...
+2. Unity mit Version und den Assets fÃ¼r Feuer, Rauch und dem Dummy...
 
 ## Usage:
   This VR training prototype is used to simulate environments where firefighters can practice navigating through random building layouts, responding to different emergency situations, and improving spatial awareness.
@@ -45,14 +45,14 @@ The layout consists of several corridor and room types, including:
 - Room elements: Corner, alcove, open space, and different wall configurations.
 
 <p float="left">
-	<img src="./Sources/Images/StartEnd.png" width="200" />
-	<img src="./Sources/Images/Corridor.png" width="200" />
-	<img src="./Sources/Images/CorridorDoor.png" width="200" />
+	<img src="./Sources/Images/StartEnd.png" width="200" height="250"/>
+	<img src="./Sources/Images/Corridor.png" width="200" height="250" />
+	<img src="./Sources/Images/CorridorDoor.png" width="200" height="250" />
 </p>
 <p float="left">
-	<img src="./Sources/Images/Corner.png" width="200" />
-	<img src="./Sources/Images/TCrossing.png" width="200" />
-	<img src="./Sources/Images/XCrossing.png" width="200" />
+	<img src="./Sources/Images/Corner.png" width="200" height="250" />
+	<img src="./Sources/Images/TCrossing.png" width="200" height="250" />
+	<img src="./Sources/Images/XCrossing.png" width="200" height="250" />
 </p>
 
 
