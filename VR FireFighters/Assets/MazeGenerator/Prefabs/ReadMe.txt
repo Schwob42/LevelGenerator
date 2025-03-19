@@ -1,7 +1,6 @@
 Sizes and positions of the individual components
-Author: Tim Fabian
 
-Each prefab consists of a floor, a ceiling and up to four walls or columns/corners. 
+Each prefab consists of a floor, a ceiling, and up to four walls or columns/corners. 
 The individual components have the following sizes (x, y, z):
 Ceiling and floor: (2, 0.1, 2)
 Walls: (0.2, 2, 2)
