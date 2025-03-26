@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5226,8 +5226,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 845646943}
   m_HandleRect: {fileID: 845646942}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.66666675
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5736,7 +5736,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00002670288}
+  m_AnchoredPosition: {x: 0, y: -0.000034332275}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &496803845
@@ -7424,7 +7424,6 @@ RectTransform:
   m_Children:
   - {fileID: 1740914281}
   - {fileID: 1529267328}
-  - {fileID: 1383135134}
   - {fileID: 792157294}
   m_Father: {fileID: 70507172}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7476,7 +7475,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 656828643}
   m_Template: {fileID: 792157294}
   m_CaptionText: {fileID: 1740914282}
-  m_CaptionImage: {fileID: 1383135135}
+  m_CaptionImage: {fileID: 0}
   m_Placeholder: {fileID: 0}
   m_ItemText: {fileID: 567830525}
   m_ItemImage: {fileID: 1560256542}
@@ -7484,15 +7483,15 @@ MonoBehaviour:
   m_Options:
     m_Options:
     - m_Text: Dummy
-      m_Image: {fileID: 21300000, guid: 0c84c90b2cb1ac642b0c79c8f152d775, type: 3}
+      m_Image: {fileID: 0}
     - m_Text: Leicht verletze Person
-      m_Image: {fileID: 21300000, guid: f5836ae086980b84783089a9977cc127, type: 3}
+      m_Image: {fileID: 0}
     - m_Text: Schwer verletze Person
-      m_Image: {fileID: 21300000, guid: c290c6b8a8f5b2f4f9ca071826c1b264, type: 3}
+      m_Image: {fileID: 0}
     - m_Text: Tote Person
-      m_Image: {fileID: 21300000, guid: a313edb2b4ba31742b53dd41d3faf3f8, type: 3}
+      m_Image: {fileID: 0}
     - m_Text: Verbrannte Person
-      m_Image: {fileID: 21300000, guid: 5ac961146d42a5f4b8908a9c0ac3726e, type: 3}
+      m_Image: {fileID: 0}
     - m_Text: Unverletzte Person
       m_Image: {fileID: 0}
   m_OnValueChanged:
@@ -14455,81 +14454,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1371421887}
-  m_CullTransparentMesh: 1
---- !u!1 &1383135133
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1383135134}
-  - component: {fileID: 1383135136}
-  - component: {fileID: 1383135135}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1383135134
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1383135133}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 656828641}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 449, y: -161.1}
-  m_SizeDelta: {x: 200, y: 200}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1383135135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1383135133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c84c90b2cb1ac642b0c79c8f152d775, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1383135136
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1383135133}
   m_CullTransparentMesh: 1
 --- !u!1 &1383672017
 GameObject:
