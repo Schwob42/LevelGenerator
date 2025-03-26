@@ -1,93 +1,123 @@
-# VR_FireFighters
+# TODOS
+- Remove old branch
+- Remove unused images
+- Remove unused materials
+- Wo kommt der Dummy her?
+- Looking for old stuff (alles mal am originalen Projekt durchgehen)
 
 
+# Level Generator for Firefighter VR Training
 
-## Getting started
+This repository contains a prototype for a **level generator** used in a **virtual reality training** environment for firefighters. The goal of the project is to create a dynamic and random floor plan with rooms, corridors, fire, smoke, and injured persons to simulate realistic emergency situations for firefighter training.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/Schwob42/vr_firefighters.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/Schwob42/vr_firefighters/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Settings](#settings)
+- [Algorithm Overview](#algorithm-overview)
+- [Corridor and Room Elements](#corridor-and-room-elements)
+- [Detailed Algorithm](#detailed-algorithm)
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Schwob42/LevelGenerator.git
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+2. Unity:mit Version und den Assets für Feuer, Rauch und dem Dummy...
+ - The simulation was created with Unity (version 2022.3.17f1)
+ - Assets that were used:
+ 	- [Free Fire VFX](https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-266227) For Free
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## Usage:
+  This VR training prototype is used to simulate environments where firefighters can practice navigating through random building layouts, responding to different emergency situations, and improving spatial awareness.
+  - VR Simulation: Firefighters navigate through a smoke-filled building to simulate real-life emergency scenarios.
+  - Dynamic Floor Generation: The system randomly generates rooms and corridors based on various parameters and user settings.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Settings
+  The user can adjust the following parameters for the environment generation:
+  - Maximum depth and width of the floor (in meters).
+  - Starting point for the algorithm (the access door to the floor).
+  - Whether rooms and corridors should be generated or only one type.
+  - Minimum number of corridor elements before a curve or intersection.
+  - Probability for placing specific corridor elements (0-100%).
+  - Room dimensions (in elements).
+  - Option to use a seed to generate identical results.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Algorithm Overview
+The algorithm for generating the layout of the floor is based on a maze generation approach. It uses the following steps:
+- Start with an empty floor grid and place the starting point.
+- Use the random selection of corridor and room elements to populate the grid.
+- Continuously check for conflicts in placement using Boolean operations.
+- Optionally, rooms and obstacles can be placed in corridors.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+## Corridor and Room Elements
+The layout consists of several corridor and room types, including:
+- Corridor elements: start and end, corridor, corridor with door, curve, T-junction, X-junction
+<p float="left">
+	<img src="./Sources/Images/StartEnd.png" width="200" height="210"/>
+	<img src="./Sources/Images/Corridor.png" width="210" height="210" />
+	<img src="./Sources/Images/CorridorDoor.png" width="210" height="210" />
+</p>
+<p float="left">
+	<img src="./Sources/Images/Corner.png" width="200" height="210" />
+	<img src="./Sources/Images/TCrossing.png" width="210" height="210" />
+	<img src="./Sources/Images/XCrossing.png" width="210" height="210" />
+</p>
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+- Room elements: alcove, wall on one side, a wall with a door, walls on both sides, room corner, floor only
 
-## License
-For open source projects, say how it is licensed.
+<p float="left">
+	<img src="./Sources/Images/RoomEnd.png" width="200" height="210"/>
+	<img src="./Sources/Images/RoomWall.png" width="200" height="210" />
+	<img src="./Sources/Images/RoomDoor.png" width="200" height="210" />
+</p>
+<p float="left">
+	<img src="./Sources/Images/RoomBothSides.png" width="200" height="210" />
+	<img src="./Sources/Images/RoomCorner.png" width="200" height="210" />
+	<img src="./Sources/Images/RoomEmpty.png" width="200" height="210" />
+</p>
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Detailed Algorithm
+
+The basic idea of the algorithm is based on the algorithm of [Maze2](https://catlikecoding.com/unity/tutorials/prototypes/maze-2/), which also creates a level with corridors but fills the entire possible space. Maze2 uses the entire possible space of the playing field to create a maze. The algorithm in this work can utilize the entire space but does not have to. In addition, rooms are generated at the corridors that are not generated in Maze2. At the beginning, an empty floor with the specified depth and width is created and divided into X by Y (specified by the user settings) cells. Each of these cells has four boolean attributes that indicate whether the passage to the cell in the respective direction is free (TRUE) or blocked (FALSE). Initially, this would be as in the example.
+<p float="center">
+	<img src="./Sources/Images/EmptyField.png" width="250" height="250"/>
+</p>
+Once completed, a start element is placed at the start position. Then, the following steps are run through until all corridors have been completed.
+
+<p float="left">
+	<img src="./Sources/Images/EmptyFieldStart.png" width="300" height="300"/>
+	<img src="./Sources/Images/Algo_Start.png" width="300" height="300" />
+</p>
+<p>
+	<img src="./Sources/Images/Algo_Next1.png" width="300" height="300" />
+	<img src="./Sources/Images/Algo_Next2.png" width="300" height="300" />
+	<p>Sequence of the algorithm using a new cell field (top left) with setting the starting point (top right) and selecting the next cell to be occupied (bottom left) and the following cell (bottom right). The blue field signals the start field while green marks the selected field. Grey signals the generated path.</p>
+</p>
+
+### Step 1. Adjust Set and Surrounding Cells
+After an element has been placed in a cell, the four boolean attributes are adjusted to update the information for walls or potential passages.
+For each of these attributes, a logical (Boolean) AND of the Boolean of the original cell and the selected element is performed.
+For example, this would be North: True && True = True, East: True && False = False, South: True && False = False, West: True && False = False. A logical AND of the neighboring cardinal points of adjacent cells is then performed. 
+
+### Step 2. Find Suitable Neighboring Cells
+If the cell just placed is an end, the recursive part ends at this point. The corridor or an arm of the corridor is then completed.
+If the minimum number of consecutive corridors has not yet been reached, a corridor with or without a door is automatically taken and placed (possibly rotated) in the continuing direction. The algorithm then jumps back to step 1.
+If none of the above cases apply, up to three neighboring cells are checked to see whether they are free and can be reached from the current cell (Boolean = True), starting from the cell that has just been placed.
+
+### Step 3. Find a Suitable Element for The Cell
+For each of the up to three cells that are considered suitable, a list of possible aisle elements is created that can be placed in this cell without aisles being blocked by adjacent walls. Under certain circumstances, such as collisions with surrounding fields or open passages that would lead outside the playing field, the aisle elements are rotated several times to check their placement. One of the aisle elements is then selected and placed from the list of elements with the probabilities specified by the user. If the selected element has a door, the next step follows. Otherwise, the algorithm starts recursively at step 1.
+
+### Step 4. Creating a Room
+If an aisle element has a door, the algorithm attempts to create a room behind this door. As success cannot be guaranteed because, for example, a room would have to be generated outside the playing field or because another corridor element has already been placed behind the door, the algorithm may subsequently remove the door so that the same corridor element has been placed without the door.
+A room is created recursively, similar to an aisle. The algorithm attempts to create a room that is as large as possible and meets the user's settings as closely as possible. A room can be smaller but not larger than the user specification.
+
+### Deviations of The algorithm from The User Settings#
+As corridors and rooms are generated randomly, it may happen that the algorithm cannot add a corridor element to a cell without contradicting the user's settings. For example, an intersection might be placed at an aisle to which a curve, T-junction, or an end must be placed immediately so that the maximum width of the floor is not exceeded. If the user has specified that an aisle must consist of at least three consecutive corridors before another element can be selected, this leads to a contradiction. At this point, the algorithm marks the problematic cell so that it is considered <I>filled</I> but remains empty for the moment and adds it to an internal list for later revision. When the algorithm has completed all steps, for each cell in this list, an aisle element is now selected that fits exactly into the cell without looking at new cells, regardless of the user settings. In the example, this could be an end.
+
+<p float="center">
+	<img src="./Sources/Images/Algo_Problem.png" width="250" height="250"/>
+	<p>Problematic cell that must be given a corridor (due to the user setting of at least three corridors), but cannot, as this would lead to a path to nowhere (end of the world). The previous path is marked in gray.</p>
+</p>
+
