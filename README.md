@@ -1,11 +1,8 @@
-# TODOS
-- Wo kommt der Dummy her?
-- Looking for old stuff (alles mal am originalen Projekt durchgehen)
-
-
 # Level Generator for Firefighter VR Training
 
-This repository contains a prototype for a **level generator** used in a **virtual reality training** environment for firefighters. The goal of the project is to create a dynamic and random floor plan with rooms, corridors, fire, smoke, and injured persons to simulate realistic emergency situations for firefighter training.
+This repository contains a prototype for a **level generator** used in a **virtual reality training** environment for firefighters. The goal of the project is to create a dynamic and random floor plan with rooms, corridors, fire, smoke, and injured persons to simulate realistic emergency situations for firefighter training.  
+
+<strong>Warning:</strong> This is only a prototype. So this is not the prettiest UI, there are bugs and the code is not finished. 
 
 ## Table of Contents
 - [Installation](#installation)
