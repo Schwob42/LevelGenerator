@@ -1,7 +1,4 @@
 # TODOS
-- Remove old branch
-- Remove unused images
-- Remove unused materials
 - Wo kommt der Dummy her?
 - Looking for old stuff (alles mal am originalen Projekt durchgehen)
 
