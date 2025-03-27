@@ -26,7 +26,13 @@ This repository contains a prototype for a **level generator** used in a **virtu
  - Assets that were used:
  	- [Free Fire VFX](https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-266227) For Free
 
-## Usage:
+### Branches
+There are two branches:
+  - MazeGenerator: The MazeGenerator is a version of [Maze2](https://catlikecoding.com/unity/tutorials/prototypes/maze-2/) where the whole game field should be used to render a maze.
+  - LevelGenerator: The LevelGenerator is also based on this Algorithm, but COULD (no need) use the whole game field and can render paths (corridors) and rooms.  
+Both branches have small ReadMes.
+
+## Usage
   This VR training prototype is used to simulate environments where firefighters can practice navigating through random building layouts, responding to different emergency situations, and improving spatial awareness.
   - VR Simulation: Firefighters navigate through a smoke-filled building to simulate real-life emergency scenarios.
   - Dynamic Floor Generation: The system randomly generates rooms and corridors based on various parameters and user settings.
