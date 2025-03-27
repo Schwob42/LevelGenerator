@@ -26,6 +26,9 @@ This repository contains a prototype for a **level generator** used in a **virtu
  - Assets that were used:
  	- [Free Fire VFX](https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-266227) For Free
 
+### Language
+The primary language of the UI is German. The code is written and documented in English (mostly). 
+
 ### Branches
 There are two branches:
   - MazeGenerator: The MazeGenerator is a version of [Maze2](https://catlikecoding.com/unity/tutorials/prototypes/maze-2/) where the whole game field should be used to render a maze.
