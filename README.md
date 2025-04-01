@@ -18,7 +18,7 @@ This repository contains a prototype for a **level generator** used in a **virtu
    ```bash
    git clone https://github.com/Schwob42/LevelGenerator.git
 
-2. Unity:mit Version und den Assets für Feuer, Rauch und dem Dummy...
+2. Unity:  
  - The simulation was created with Unity (version 2022.3.17f1)
  - Assets that were used:
  	- [Free Fire VFX](https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-266227) For Free
